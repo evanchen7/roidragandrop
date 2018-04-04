@@ -35,9 +35,13 @@ export default class App extends Component {
   }
 
   captureScreen() {
-    html2canvas(document.querySelector("#main"),
-    {letterRendering: 1, allowTaint : true, onrendered : (canvas) => { } })
-      .then(canvas => { document.body.appendChild(canvas)
+    html2canvas(document.querySelector("#main"), { letterRendering: 1, useCORS : true })
+      .then(canvas => {
+        canvas.id = "canvascapture";
+        let dataURL = canvas.toDataURL('image/png', 1.0);
+        document.querySelector("#screenshot1").src = dataURL;
+        // let dataURL = canvas.toDataURL('image/png', 1.0);
+        // console.log(dataURL)
     });
   }
 

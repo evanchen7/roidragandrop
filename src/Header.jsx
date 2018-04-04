@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Icon, Modal } from 'semantic-ui-react';
+import { Button, Header, Icon, Modal, Grid, Image } from 'semantic-ui-react';
 import axios from 'axios';
 import ModalForm from './ModalForm';
 import './css/main.css';
@@ -8,24 +8,30 @@ export default class Headers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      "modalOpen": false
+      "modalOpenSave": false,
+      "modalOpenScreenShot": false
     }
-    this.handleOpen = this.handleOpen.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.handleOpenSave = this.handleOpenSave.bind(this);
+    this.handleCloseSave = this.handleCloseSave.bind(this);
+    this.handleOpenScreenshot = this.handleOpenScreenshot.bind(this);
+    this.handleCloseScreenshot = this.handleCloseScreenshot.bind(this);
   }
 
-  handleOpen() {
-    this.setState({ modalOpen: true });
+  handleOpenSave() {
+    this.setState({ modalOpenSave: true });
   }
 
-  handleClose() {
-    this.setState({ modalOpen: false });
+  handleCloseSave() {
+    this.setState({ modalOpenSave: false });
   }
 
-  // {this.state.headerSelection && this.state.moduleSelection && this.state.footerSelection ?
-  //  <button onClick={this.captureScreen}><Icon name='plus'>Select</Icon></button> :
-  //  <button value="All Modules"><Icon name='plus'/>Not Ready</button>
-  // }
+  handleOpenScreenshot() {
+    this.setState({ modalOpenScreenShot: true });
+  }
+
+  handleCloseScreenshot() {
+    this.setState({ modalOpenScreenShot: false });
+  }
 
   render() {
     return (
@@ -36,12 +42,41 @@ export default class Headers extends Component {
                 </div>
 
                 <div className = "columns right">
-                  <a  onClick={this.props.saveScreenshot} className = "button pill small">Screenshot</a>
-                  <div onClick={this.handleOpen}>
+                  <div onClick={this.handleOpenScreenshot}>
+                  <Modal
+                      trigger={<a  className = "button pill small">Screenshot</a>}
+                      open={this.state.handleCloseSave}
+                      onClose={this.handleCloseScreenshot}
+                      basic
+                      size='large'
+                    >
+                      <Header icon='camera' content='Take a screenshot' />
+                      <Grid centered>
+                      <Modal.Content size="large">
+
+                            <Image size="large" id="screenshot1" src="https://pbs.twimg.com/media/DYCcriDUQAAudCP.jpg"></Image>
+
+                      </Modal.Content>
+
+                      <Modal.Actions>
+                        <ModalForm/>
+                        <br/>
+                        <Button color='green' onClick={this.props.saveScreenshot} inverted>
+                          <Icon name='checkmark' /> Screenshot
+                        </Button>
+                        <Button color='blue' onClick={console.log} inverted>
+                          <Icon name='arrow right'/> Save Image
+                       </Button>
+                      </Modal.Actions>
+                      </Grid>
+                    </Modal>
+                  </div>
+
+                  <div onClick={this.handleOpenSave}>
                     <Modal
                         trigger={<a  className = "button pill small">Save</a>}
-                        open={this.state.modalOpen}
-                        onClose={this.handleClose}
+                        open={this.state.modalOpenSave}
+                        onClose={this.handleCloseSave}
                         basic
                         size='small'
                       >
@@ -53,7 +88,7 @@ export default class Headers extends Component {
                           <Button color='green' onClick={console.log} inverted>
                             <Icon name='checkmark' /> Save
                           </Button>
-                          <Button color='red' onClick={this.handleClose} inverted>
+                          <Button color='red' onClick={this.handleCloseSave} inverted>
                             <Icon name='cancel'/>Cancel
                          </Button>
                         </Modal.Actions>
