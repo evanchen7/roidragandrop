@@ -1,23 +1,53 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Form, Label } from 'semantic-ui-react';
-const color = {"background-color": "#8cc800", "color": "#333"};
+import { Button, Checkbox, Form, Label, Icon } from 'semantic-ui-react';
 
 export default class ModalForm extends Component {
   render() {
+    let buttonDisable =
+      this.props.updatedFormValues.authorName &&
+      this.props.updatedFormValues.authorEmail &&
+      this.props.updatedFormValues.projectTitle &&
+      this.props.updatedFormValues.previewScreenshot !== null;
     return (
-      <Form className={color}>
-        <Form.Field className={color}>
-          <Label className={color}>Author Name</Label>
-          <input placeholder='Author Name' />
+      <Form>
+        <Form.Field>
+          <Label color="grey" >Author Name</Label>
+          <input
+            placeholder='Author Name'
+            value={this.props.updatedFormValues.authorName}
+            onChange={this.props.handleName}/>
         </Form.Field>
         <Form.Field>
-          <Label className={color}>Author Email</Label>
-          <input placeholder='Author Email' />
+          <Label color="grey" >Author Email</Label>
+          <input
+            placeholder='Author Email'
+            value={this.props.updatedFormValues.authorEmail}
+            onChange={this.props.handleEmail}/>
         </Form.Field>
         <Form.Field>
-          <Label className={color}>Project Title</Label>
-          <input placeholder='Project Title' />
+          <Label color="grey" >Project Title</Label>
+          <input
+            placeholder='Project Title'
+            value={this.props.updatedFormValues.projectTitle}
+            onChange={this.props.handleProjectTitle}/>
         </Form.Field>
+        <Button size='large' color='grey' onClick={this.props.previewScreenshot} inverted animated>
+          <Button.Content visible>Preview</Button.Content>
+          <Button.Content hidden>
+            <Icon fitted name='photo'/>
+          </Button.Content>
+        </Button>
+        <Button
+          size='large'
+          color='blue'
+          onClick={this.props.saveScreenshot}
+          disabled={buttonDisable ? false :true}
+          inverted animated>
+          <Button.Content visible>Submit</Button.Content>
+          <Button.Content hidden>
+            <Icon fitted name='save'/>
+          </Button.Content>
+        </Button>
       </Form>
     );
   }
