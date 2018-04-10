@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Header, Icon, Modal, Grid, Image, Divider } from 'semantic-ui-react';
-import axios from 'axios';
+import { Header, Icon, Modal, Grid, Image } from 'semantic-ui-react';
 import ModalForm from './ModalForm';
 import './css/main.css';
 
@@ -48,8 +47,7 @@ export default class Headers extends Component {
                       open={this.state.handleCloseSave}
                       onClose={this.handleCloseScreenshot}
                       basic
-                      size='large'
-                    >
+                      size='large'>
                       <Header textAlign='center' icon='camera'>
                         <Header.Content>
                         <Icon name='photo' />Save Screenshot
@@ -57,13 +55,12 @@ export default class Headers extends Component {
                       </Header>
                         <br />
                       <Grid centered columns={2}>
-
                           <Modal.Content image scrolling>
                               <Image size="large" id="newScreenshot" src="https://www.webpagefx.com/blog/images/cdn.designinstruct.com/files/582-how-to-image-placeholders/generic-image-placeholder.png"></Image>
                           </Modal.Content>
-
                         <Modal.Actions>
                           <ModalForm
+                            dataSaveStatus={this.props.dataSaveStatus}
                             updatedFormValues={this.props.updatedFormValues}
                             handleName={this.props.handleName}
                             handleEmail={this.props.handleEmail}

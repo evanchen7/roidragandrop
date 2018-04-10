@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Checkbox, Form, Label, Icon } from 'semantic-ui-react';
+import { Button, Form, Label, Icon, Modal, Loader, Dimmer } from 'semantic-ui-react';
 
 export default class ModalForm extends Component {
   render() {
@@ -37,17 +37,29 @@ export default class ModalForm extends Component {
             <Icon fitted name='photo'/>
           </Button.Content>
         </Button>
-        <Button
-          size='large'
-          color='blue'
-          onClick={this.props.saveScreenshot}
-          disabled={buttonDisable ? false :true}
-          inverted animated>
-          <Button.Content visible>Submit</Button.Content>
-          <Button.Content hidden>
-            <Icon fitted name='save'/>
-          </Button.Content>
-        </Button>
+        <Modal
+            trigger = {<Button
+            size='large'
+            color='blue'
+            onClick={this.props.saveScreenshot}
+            disabled={buttonDisable ? false :true}
+            inverted animated>
+            <Button.Content visible>Submit</Button.Content>
+            <Button.Content hidden>
+              <Icon fitted name='save'/>
+            </Button.Content>
+          </Button>}>
+          <Modal.Content>
+            { this.props.dataSaveStatus ?
+              <h2>Post: {this.props.dataSaveStatus} saved to WordPress</h2> :
+              <Dimmer active>
+                <Loader content='Loading' />
+              </Dimmer>
+            }
+          </Modal.Content>
+        </Modal>
+
+
       </Form>
     );
   }

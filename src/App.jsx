@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Grid, Image, Icon } from 'semantic-ui-react';
+import WPAPI from 'wpapi';
+import { Image } from 'semantic-ui-react';
 import html2canvas from 'html2canvas';
 import Headers from './Header';
 import Modules from './Modules';
@@ -9,7 +10,6 @@ import './css/main.css';
 const HEADER = 'https://damcms.roidna.com/wp-json/wp/v2/header';
 const MODULE = 'https://damcms.roidna.com/wp-json/wp/v2/module';
 const FOOTER = 'https://damcms.roidna.com/wp-json/wp/v2/footer';
-const FINISHEDPAGES = 'http://roidnadam.local/wp-json/wp/v2/finished_page'; // Change for testing
 
 export default class App extends Component {
   constructor() {
@@ -21,10 +21,11 @@ export default class App extends Component {
       headerSelection: null,
       moduleSelection: null,
       footerSelection: null,
-      previewScreenshot: null,
+      previewScreenshot: {},
       authorName: '',
       authorEmail: '',
       projectTitle: '',
+      dataSaveStatus: null,
       error: null,
     };
     this.grabDataFromWordPress = this.grabDataFromWordPress.bind(this);
@@ -49,7 +50,10 @@ export default class App extends Component {
         let dataURL = canvas.toDataURL('image/png', 1.0);
         document.querySelector("#newScreenshot").src = dataURL;
         return dataURL;
-    }).then((preview) => { this.setState({ previewScreenshot: preview })});
+    }).catch((err) => {
+      let error = { ...this.state.error, [err]: err}
+      this.setState({error});
+    });
   }
 
   handleName(e) {
@@ -75,23 +79,50 @@ export default class App extends Component {
 
   saveScreenshot(e) {
     e.preventDefault();
-    let postData = {
-      authorName: this.state.authorName,
-      authorEmail: this.state.authorEmail,
-      projectTitle: this.state.projectTitle,
-      previewScreenshot: this.state.previewScreenshot
+
+    const wp = new WPAPI({
+      endpoint: 'http://roidnadam.local/wp-json',
+      username: 'evan@roidna.com',
+      password: 'Gvpix5597!Gvpix5597!',
+      auth: true
+    });
+    wp.finishedPage = wp.registerRoute('wp/v2', '/finished_page');
+    const postData = {
+      author_name: this.state.authorName,
+      author_email: this.state.authorEmail,
+      project_title: this.state.projectTitle,
+      headerid: this.state.headerSelection.id,
+      moduleid: this.state.moduleSelection.id,
+      footerid: this.state.footerSelection.id
     }
-    console.log(postData)
-    this.setState((prevState, props) => ({
-        authorName: '',
-        authorEmail: '',
-        projectTitle: '',
-        previewScreenshot: {}
-    }));
-    // let details = {};
-    // axios.post(FINISHEDPAGES, details)
-    //   .then(response => console.log(response))
-    //   .catch(error => this.setState({error}));
+    const generateImage = () => {
+      return (
+        `<img src=${this.state.headerSelection.url} />
+        <img src=${this.state.moduleSelection.url} />
+        <img src=${this.state.footerSelection.url} />`
+      )
+    }
+
+    if (!postData) {
+      let error = "No Post Data!"
+      this.setState(...this.state.error, [error]: error);
+    }
+
+    wp.finishedPage()
+      .create({
+        title: postData.project_title,
+        content: generateImage(),
+        status: 'publish',
+        tags: ['Finished Page'],
+        fields: postData
+      }).then((res) => {
+        this.setState({
+          dataSaveStatus: res.id
+        })
+      }).catch((err) => {
+        let error = { ...this.state.error, [err]: err}
+        this.setState({error});
+      });
   }
 
   grabDataFromWordPress() {
@@ -132,6 +163,7 @@ export default class App extends Component {
     return (
       <div className="wrapper">
         <Headers
+          dataSaveStatus={this.state.dataSaveStatus}
           updatedFormValues={updatedFormValues}
           handleName={this.handleName}
           handleEmail={this.handleEmail}
