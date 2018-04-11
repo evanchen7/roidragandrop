@@ -170,27 +170,36 @@ export default class App extends Component {
           handleProjectTitle={this.handleProjectTitle}
           previewScreenshot={this.previewScreenshot}
           saveScreenshot={this.saveScreenshot}/>
-
+      <div id = "menu">
+        <ul>
+          <li>
             <div >
-             <Modules
-               data={this.state.header}
-               moduleName={"Header"}
-               handleSelection={this.handleHeaderSelection}/>
-           </div>
-            <div>
-             <Modules
-               data={this.state.module}
-               moduleName={"Module"}
-              handleSelection={this.handleModuleSelection}/>
-           </div>
+              <Modules
+                data={this.state.header}
+                moduleName={"Header"}
+                handleSelection={this.handleHeaderSelection}/>
+              </div>
+          </li>
+          <li>
             <div >
-             <Modules
-               data={this.state.footer}
-               moduleName={"Footer"}
-               handleSelection={this.handleFooterSelection}/>
-           </div>
+              <Modules
+                data={this.state.module}
+                moduleName={"Module"}
+                handleSelection={this.handleModuleSelection}/>
+              </div>
+            </li>
+            <li>
+              <div >
+                <Modules
+                  data={this.state.footer}
+                  moduleName={"Footer"}
+                  handleSelection={this.handleFooterSelection}/>
+                </div>
+            </li>
+          </ul>
+        </div>
 
-           <div >
+           <div>
             <main id = "main" className="text-center">
               <h2>Draggable Module Tool</h2>
               <div id ="screenshotarea" className = "row target-body">

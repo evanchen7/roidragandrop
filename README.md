@@ -2,6 +2,8 @@
 
 This project is a reimplementation of the Drag and Drop website. Refer to the original repo: https://github.com/roidna/drag-and-drop
 
+I utilized Facebook's React boilerplate starter application: Create-React-App (https://github.com/facebook/create-react-app)
+
 ## Getting Started
 
 Within your local development environment, you run you will have to have Node installed and a package management tool. I use NPM or Yarn.
@@ -12,38 +14,22 @@ Check the package.json files for start scripts and dependencies. For this projec
 
 ```
 npm install
-npm start
+
 ```
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
+In the same directory as the package.json file, run the following commands below. Currently the development build is running, production version has not been built yet.
 
 ```
-Give the example
+npm start
 ```
 
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+Webpack should display a development server running which will actively listen for any file changes. If you save a file for example, Webpack will reload and any content you have on the browser will be refreshed.
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+Tests haven't been written yet. Only App.jsx has one test.
 
 ### Styling Guide
 
@@ -58,10 +44,8 @@ TBD - Docker image in progress
 * [React](https://reactjs.org/) - The web framework used
 * [NodeJS](https://nodejs.org/en/) - JavaScript networking and package management
 * [Docker](https://www.docker.com/) - Cloud container technology used for building and shipping applications
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+* [Semantic UI](https://react.semantic-ui.com) - UI Framework built with React components
+* [WP-API](https://github.com/WP-API/node-wpapi) - A NodeJS library used to interact with Wordpress REST API
 
 ## Authors
 

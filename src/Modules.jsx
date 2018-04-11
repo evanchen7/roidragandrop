@@ -32,18 +32,16 @@ export default class Modules extends Component {
     const { searchQuery, value } = this.state;
 
     return (
-      <Dropdown
-        compact
-        placeholder={`${this.props.moduleName}`}
-        openOnFocus
-        selection
-        value={value}
-        onChange={this.props.handleSelection}
-        search
-        onSearchChange={this.handleSearchChange}
-        options={convertedData}
-        icon ='plus' fluid floating labeled button className='icon'>
-      </Dropdown>
+          <Dropdown
+            placeholder={`${this.props.moduleName}`}
+            onChange={this.props.handleSelection}
+            onSearchChange={this.handleSearchChange}
+            options={convertedData}
+            value={value}
+            icon="search"
+            pointing="left"
+            openOnFocus selection search floating inline labeled>
+          </Dropdown>
     );
   }
 }
