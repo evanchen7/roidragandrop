@@ -37,7 +37,16 @@ Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
 
 ## Deployment
 
-TBD - Docker image in progress
+Pull from evanchen7/react-dam:latest
+
+```
+docker run -it \
+  -v ${PWD}:/usr/src/app \
+  -v /usr/src/app/node_modules \
+  -p 3000:3000 \
+  --rm \
+  react-dam:latest
+```
 
 ## Built With
 
