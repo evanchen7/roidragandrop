@@ -10,6 +10,8 @@ import './css/main.css';
 const HEADER = 'https://damcms.roidna.com/wp-json/wp/v2/header';
 const MODULE = 'https://damcms.roidna.com/wp-json/wp/v2/module';
 const FOOTER = 'https://damcms.roidna.com/wp-json/wp/v2/footer';
+const DEVELOPMENTURL ='http://54.183.106.255:8000/';
+// const LOCALDEVURL = 'http://roidnadam.local/wp-json';
 
 export default class App extends Component {
   constructor() {
@@ -81,7 +83,7 @@ export default class App extends Component {
     e.preventDefault();
 
     const wp = new WPAPI({
-      endpoint: 'http://roidnadam.local/wp-json',
+      endpoint: DEVELOPMENTURL,
       username: 'evan@roidna.com',
       password: 'Gvpix5597!Gvpix5597!',
       auth: true
