@@ -105,7 +105,7 @@ export default class App extends Component {
 
     if (!postData) {
       let error = "No Post Data!"
-      this.setState(...this.state.error, [error]: error);
+      this.setState(...this.state.error, {[error]: error});
     }
 
     wp.finishedPage()

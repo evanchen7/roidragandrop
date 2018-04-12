@@ -40,7 +40,7 @@ export default class Modules extends Component {
             value={value}
             icon="search"
             pointing="left"
-            openOnFocus selection search floating inline labeled>
+            openOnFocus selection search  labeled>
           </Dropdown>
     );
   }

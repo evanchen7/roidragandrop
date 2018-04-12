@@ -47,6 +47,7 @@ export default class Headers extends Component {
                       open={this.state.handleCloseSave}
                       onClose={this.handleCloseScreenshot}
                       basic
+                      dimmer='blurring'
                       size='large'>
                       <Header textAlign='center' icon='camera'>
                         <Header.Content>
