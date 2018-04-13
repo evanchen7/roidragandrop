@@ -37,15 +37,10 @@ Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
 
 ## Deployment
 
-Pull from evanchen7/react-dam:latest
+Pull from evanchen7/react-docker:latest. A docker-compose file is included in the DAMModule repo
 
 ```
-docker run -it \
-  -v ${PWD}:/usr/src/app \
-  -v /usr/src/app/node_modules \
-  -p 3000:3000 \
-  --rm \
-  react-dam:latest
+docker run -d -it --rm -p 80:5000 --name draganddrop evanchen7/react-docker
 ```
 
 ## Built With
