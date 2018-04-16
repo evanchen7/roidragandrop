@@ -7,11 +7,14 @@ import Headers from './Header';
 import Modules from './Modules';
 import './css/main.css';
 
-const HEADER = 'https://damcms.roidna.com/wp-json/wp/v2/header';
-const MODULE = 'https://damcms.roidna.com/wp-json/wp/v2/module';
-const FOOTER = 'https://damcms.roidna.com/wp-json/wp/v2/footer';
-const DEVELOPMENTURL ='http://54.183.106.255:8000/';
-// const LOCALDEVURL = 'http://roidnadam.local/wp-json';
+const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
+const HEADER = `${apiUrl}/wp-json/wp/v2/header`;
+const MODULE = `${apiUrl}/wp-json/wp/v2/module`;
+const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
+const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+
+console.log('Header ', HEADER)
+console.log('APIURL ', apiUrl)
 
 export default class App extends Component {
   constructor() {

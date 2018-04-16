@@ -1,0 +1,47 @@
+version: '2'
+services:
+  wordpress-dam: # Custom WP build for ROI-DNA DAM Modules
+    image: evanchen7/roidnadammodule:latest
+    ports:
+      - 8000:80
+    volumes: # Mounts a directory for data persistence
+      - ./wp-app/:/var/www/html
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - wordpress-network
+    restart: always
+  db:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    volumes: # Seeds database from wordpress-migrate-20180416190358.sql
+    # - dbdata:/var/log/mysql
+     - ./wp-data:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - wordpress-network
+    restart: always
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8181:80
+    environment:
+      MYSQL_USERNAME: root
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - wordpress-network
+    restart: always
+networks:
+  wordpress-network:
+      driver: bridge
+
+volumes:
+  dbdata:
