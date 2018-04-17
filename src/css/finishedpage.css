@@ -1,9 +1,39 @@
 .container {
-    display: grid;
-    grid-template-columns: repeat(5, 20px);
-    grid-template-rows: repeat(5, 1fr);
+  display: grid;
+  grid-template-columns: repeat(4, minmax(200px,1fr));
+  /* grid-auto-rows: 100px; */
+  grid-gap: 10px;
+  background-color: #fff;
+  color: #444;
+  margin: 10px;
 }
 
-.item {
+/* .pages {
+    border: chartreuse;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 150%;
+    object-fit: scale-down;
+  } */
 
-}
+  .test {
+    justify-items: center;
+    /* display: inline-block; */
+    border: 1px solid red;
+    width: auto;
+    height: auto;
+  }
+
+  .pages {
+    /* overflow-x: auto; */
+    justify-items: center;
+    /* display: inline-block; */
+    border: 1px solid black;
+    width: auto;
+    height: auto;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }

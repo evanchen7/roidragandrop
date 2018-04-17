@@ -31,11 +31,48 @@ export default class FinishedPage extends Component {
 
   render () {
     return (
-      <div className="container">
-        <h1>
-          Finished Page
-        </h1>
-      </div>
+
+        <div className="container">
+          <div className="test"></div>
+          <div className="test"></div>
+          <div className="test"></div>
+          <div className="pages">
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+          <div className="pages">
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+          <div className="pages">
+           <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+          <div className="pages">
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+          <div className="pages">
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+          <div className="pages">
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+          <div className="pages">
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/header_09.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/features_11.png" />
+            <img src="http://54.183.106.255:8000/wp-content/uploads/2018/03/footer_07.png" />
+          </div>
+        </div>
+
     );
   }
 }
