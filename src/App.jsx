@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
-import { Image } from 'semantic-ui-react';
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect
+} from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import Headers from './Header';
-import Modules from './Modules';
+import FinishedPage from './FinishedPage';
+import Main from './Main';
 import './css/main.css';
 
 const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
@@ -12,9 +18,6 @@ const HEADER = `${apiUrl}/wp-json/wp/v2/header`;
 const MODULE = `${apiUrl}/wp-json/wp/v2/module`;
 const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
 const DEVELOPMENTURL =`${apiUrl}/wp-json`;
-
-console.log('Header ', HEADER)
-console.log('APIURL ', apiUrl)
 
 export default class App extends Component {
   constructor() {
@@ -33,22 +36,13 @@ export default class App extends Component {
       dataSaveStatus: null,
       error: null,
     };
-    this.grabDataFromWordPress = this.grabDataFromWordPress.bind(this);
-    this.handleHeaderSelection = this.handleHeaderSelection.bind(this);
-    this.handleModuleSelection = this.handleModuleSelection.bind(this);
-    this.handleFooterSelection = this.handleFooterSelection.bind(this);
-    this.previewScreenshot = this.previewScreenshot.bind(this);
-    this.saveScreenshot = this.saveScreenshot.bind(this);
-    this.handleName = this.handleName.bind(this);
-    this.handleEmail = this.handleEmail.bind(this);
-    this.handleProjectTitle = this.handleProjectTitle.bind(this);
   }
 
   componentDidMount() {
     this.grabDataFromWordPress();
   }
 
-  previewScreenshot() {
+  previewScreenshot = () => {
     html2canvas(document.querySelector("#screenshotarea"), { letterRendering: 1, useCORS : true })
       .then(canvas => {
         canvas.id = "canvascapture";
@@ -61,28 +55,28 @@ export default class App extends Component {
     });
   }
 
-  handleName(e) {
+  handleName = (e) => {
     let value = e.target.value;
     this.setState((prevState, props) => ({
         authorName: value
     }));
   }
 
-  handleEmail(e) {
+  handleEmail = (e) => {
     let value = e.target.value;
     this.setState((prevState, props) => ({
         authorEmail: value
     }));
   }
 
-  handleProjectTitle(e) {
+  handleProjectTitle = (e) => {
     let value = e.target.value;
     this.setState((prevState, props) => ({
         projectTitle: value
     }));
   }
 
-  saveScreenshot(e) {
+  saveScreenshot = (e) => {
     e.preventDefault();
 
     const wp = new WPAPI({
@@ -130,7 +124,7 @@ export default class App extends Component {
       });
   }
 
-  grabDataFromWordPress() {
+  grabDataFromWordPress = () => {
     axios.all([ axios.get(HEADER), axios.get(MODULE), axios.get(FOOTER)])
       .then(axios.spread((headerRes, moduleRes, footerRes) => {
         this.setState({
@@ -142,19 +136,19 @@ export default class App extends Component {
       .catch(error => this.setState({ error }));
   }
 
-  handleHeaderSelection(e, selection) {
+  handleHeaderSelection = (e, selection) => {
     this.setState({
       "headerSelection": selection.value
     })
   }
 
-  handleModuleSelection(e, selection) {
+  handleModuleSelection = (e, selection) => {
     this.setState({
       "moduleSelection": selection.value
     })
   }
 
-  handleFooterSelection(e, selection) {
+  handleFooterSelection = (e, selection) => {
     this.setState({
       "footerSelection": selection.value
     })
@@ -166,7 +160,8 @@ export default class App extends Component {
       authorName, authorEmail, projectTitle, previewScreenshot
     };
     return (
-      <div className="wrapper">
+      <Router>
+        <div className="wrapper">
         <Headers
           dataSaveStatus={this.state.dataSaveStatus}
           updatedFormValues={updatedFormValues}
@@ -174,54 +169,25 @@ export default class App extends Component {
           handleEmail={this.handleEmail}
           handleProjectTitle={this.handleProjectTitle}
           previewScreenshot={this.previewScreenshot}
-          saveScreenshot={this.saveScreenshot}/>
-      <div id = "menu">
-        <ul>
-          <li>
-            <div >
-              <Modules
-                data={this.state.header}
-                moduleName={"Header"}
-                handleSelection={this.handleHeaderSelection}/>
-              </div>
-          </li>
-          <li>
-            <div >
-              <Modules
-                data={this.state.module}
-                moduleName={"Module"}
-                handleSelection={this.handleModuleSelection}/>
-              </div>
-            </li>
-            <li>
-              <div >
-                <Modules
-                  data={this.state.footer}
-                  moduleName={"Footer"}
-                  handleSelection={this.handleFooterSelection}/>
-                </div>
-            </li>
-          </ul>
+          saveScreenshot={this.saveScreenshot} />
+          <Switch>
+            <Route exact path="/"
+              render={ () =>
+               <Main
+                 header={this.state.header}
+                 module={this.state.module}
+                 footer={this.state.footer}
+                 handleHeaderSelection={this.handleHeaderSelection}
+                 handleModuleSelection={this.handleModuleSelection}
+                 handleFooterSelection={this.handleFooterSelection}
+                 headerSelection={this.state.headerSelection}
+                 moduleSelection={this.state.moduleSelection}
+                 footerSelection={this.state.footerSelection} /> }/>
+            <Route path="/finishedpages" component={FinishedPage} />
+            <Route path="*" render={() => <Redirect to="/" />} />
+          </Switch>
         </div>
-
-           <div>
-            <main id = "main" className="text-center">
-              <h2>Draggable Module Tool</h2>
-              <div id ="screenshotarea" className = "row target-body">
-                <div id = "header" className = "destination small-12">
-                  {this.state.headerSelection ? <Image src={this.state.headerSelection.url}/>: <h2>Header</h2>}
-                </div>
-                <div id = "module" className = "destination small-12">
-                  {this.state.moduleSelection ? <Image src={this.state.moduleSelection.url}/>: <h2>Module</h2>}
-                </div>
-                <div id = "footer" className= "destination small-12">
-                  {this.state.footerSelection ? <Image src={this.state.footerSelection.url}/>: <h2>Footer</h2>}
-                </div>
-              </div>
-            </main>
-          </div>
-      </div>
-
+      </Router>
     );
   }
 }

@@ -58,8 +58,6 @@ export default class ModalForm extends Component {
             }
           </Modal.Content>
         </Modal>
-
-
       </Form>
     );
   }

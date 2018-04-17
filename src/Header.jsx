@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Icon, Modal, Grid, Image } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
 import ModalForm from './ModalForm';
 import './css/main.css';
 
@@ -37,10 +38,13 @@ export default class Headers extends Component {
         <header>
             <div className = "row align-justify">
                 <div className = "columns">
-                    <img src = "img/logo.svg" className = "logo" alt="logo"/>
+                    <Link to="/">
+                      <img src = "img/logo.svg" className = "logo" alt="logo"/>
+                    </Link>
                 </div>
 
                 <div className = "columns right">
+                  <Link to="/finishedpages" className = "button pill small">Finished Pages</Link>
                   <div onClick={this.handleOpenScreenshot}>
                   <Modal
                       trigger={<a  className = "button pill small">Save</a>}
