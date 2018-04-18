@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  Redirect
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import Headers from './Header';
 import FinishedPage from './FinishedPage';
@@ -29,11 +24,13 @@ export default class App extends Component {
       headerSelection: null,
       moduleSelection: null,
       footerSelection: null,
+      initialModules: ["Header", "Module", "Footer"],
       previewScreenshot: {},
       authorName: '',
       authorEmail: '',
       projectTitle: '',
       dataSaveStatus: null,
+      sidebarVisibility: false,
       error: null,
     };
   }
@@ -55,25 +52,30 @@ export default class App extends Component {
     });
   }
 
-  handleName = (e) => {
+  handleFormInput = (e) => {
     let value = e.target.value;
-    this.setState((prevState, props) => ({
-        authorName: value
-    }));
-  }
-
-  handleEmail = (e) => {
-    let value = e.target.value;
-    this.setState((prevState, props) => ({
-        authorEmail: value
-    }));
-  }
-
-  handleProjectTitle = (e) => {
-    let value = e.target.value;
-    this.setState((prevState, props) => ({
-        projectTitle: value
-    }));
+    switch (e.target.placeholder) {
+      case "Author Name":
+        return (
+          this.setState((prevState, props) => ({
+            authorName: value
+        }))
+        );
+      case "Author Email":
+        return (
+          this.setState((prevState, props) => ({
+            authorEmail: value
+        }))
+        );
+      case "Project Title":
+        return (
+          this.setState((prevState, props) => ({
+            projectTitle: value
+        }))
+        );
+      default:
+        return null;
+    }
   }
 
   saveScreenshot = (e) => {
@@ -94,16 +96,20 @@ export default class App extends Component {
       moduleid: this.state.moduleSelection.id,
       footerid: this.state.footerSelection.id
     }
+
+    //REFACTOR
     const generateImage = () => {
+      // return this.state.map(item => `<img src="${item.url}" alt=""/>)`
+
       return (
-        `<img src=${this.state.headerSelection.url} />
-        <img src=${this.state.moduleSelection.url} />
-        <img src=${this.state.footerSelection.url} />`
+        `<img src="${this.state.headerSelection.url}" alt=""/>
+        <img src="${this.state.moduleSelection.url}" alt=""/>
+        <img src="${this.state.footerSelection.url}" alt=""/>`
       )
     }
 
     if (!postData) {
-      let error = "No Post Data!"
+      const error = "No Post Data!"
       this.setState(...this.state.error, {[error]: error});
     }
 
@@ -136,22 +142,44 @@ export default class App extends Component {
       .catch(error => this.setState({ error }));
   }
 
-  handleHeaderSelection = (e, selection) => {
-    this.setState({
-      "headerSelection": selection.value
-    })
-  }
-
   handleModuleSelection = (e, selection) => {
-    this.setState({
-      "moduleSelection": selection.value
-    })
+    switch(selection.placeholder) {
+      case 'Header':
+        return ( this.setState((prevState, props) => ({
+          "headerSelection": selection.value
+        }))
+      );
+      case 'Module':
+        return ( this.setState((prevState, props) => ({
+        "moduleSelection": selection.value
+         }))
+      );
+      case 'Footer':
+        return (
+          this.setState((prevState, props) => ({
+            "footerSelection": selection.value
+          }))
+      );
+      default:
+        return null;
+    }
   }
 
-  handleFooterSelection = (e, selection) => {
-    this.setState({
-      "footerSelection": selection.value
-    })
+  deleteModuleSelection = () => {
+
+  }
+
+  handleOptionsSidebar = () => {
+    this.setState({ sidebarVisibility: !this.state.sidebarVisibility });
+  }
+
+  handleAddModules = (moduleType) => {
+    let newInitialModules = this.state.initialModules;
+    newInitialModules.push(moduleType);
+
+    this.setState((prevState, props) => ({
+      "initialModules": newInitialModules
+    }));
   }
 
   render() {
@@ -162,30 +190,34 @@ export default class App extends Component {
     return (
       <Router>
         <div className="wrapper">
-        <Headers
-          dataSaveStatus={this.state.dataSaveStatus}
-          updatedFormValues={updatedFormValues}
-          handleName={this.handleName}
-          handleEmail={this.handleEmail}
-          handleProjectTitle={this.handleProjectTitle}
-          previewScreenshot={this.previewScreenshot}
-          saveScreenshot={this.saveScreenshot} />
-          <Switch>
-            <Route exact path="/"
-              render={ () =>
-               <Main
-                 header={this.state.header}
-                 module={this.state.module}
-                 footer={this.state.footer}
-                 handleHeaderSelection={this.handleHeaderSelection}
-                 handleModuleSelection={this.handleModuleSelection}
-                 handleFooterSelection={this.handleFooterSelection}
-                 headerSelection={this.state.headerSelection}
-                 moduleSelection={this.state.moduleSelection}
-                 footerSelection={this.state.footerSelection} /> }/>
-            <Route path="/finishedpages" component={FinishedPage} />
-            <Route path="*" render={() => <Redirect to="/" />} />
-          </Switch>
+          <Headers
+            handleAddModules={this.handleAddModules}
+            handleOptionsSidebar={this.handleOptionsSidebar}
+            dataSaveStatus={this.state.dataSaveStatus}
+            updatedFormValues={updatedFormValues}
+            handleName={this.handleFormInput}
+            handleEmail={this.handleFormInput}
+            handleProjectTitle={this.handleFormInput}
+            previewScreenshot={this.previewScreenshot}
+            saveScreenshot={this.saveScreenshot} />
+            <Switch>
+              <Route exact path="/"
+                render={ () =>
+                <Main
+                  initialModules={this.state.initialModules}
+                  header={this.state.header}
+                  module={this.state.module}
+                  footer={this.state.footer}
+                  handleHeaderSelection={this.handleModuleSelection}
+                  handleModuleSelection={this.handleModuleSelection}
+                  handleFooterSelection={this.handleModuleSelection}
+                  headerSelection={this.state.headerSelection}
+                  moduleSelection={this.state.moduleSelection}
+                  footerSelection={this.state.footerSelection}
+                  sidebarVisibility={this.state.sidebarVisibility} /> }/>
+              <Route path="/finishedpages" component={FinishedPage} />
+              <Route path="*" render={() => <Redirect to="/" />} />
+            </Switch>
         </div>
       </Router>
     );

@@ -3,15 +3,10 @@ import { Dropdown } from 'semantic-ui-react';
 import './css/main.css';
 
 export default class Modules extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchQuery: ''
-    }
-    this.handleSearchChange = this.handleSearchChange.bind(this);
-  }
 
-  handleSearchChange(e, { searchQuery }) {
+  state = { searchQuery: ''}
+
+  handleSearchChange = (e, { searchQuery }) => {
     this.setState( { searchQuery });
   }
 
@@ -22,7 +17,8 @@ export default class Modules extends Component {
         "text": item.title.rendered,
         "value": {
           "id": item.id,
-          "url": item.acf.image_upload.url
+          "url": item.acf.image_upload.url,
+          "text": item.title.rendered
         },
         "image": {
         "src": item.acf.image_upload.sizes.thumbnail
@@ -40,7 +36,7 @@ export default class Modules extends Component {
             value={value}
             icon="search"
             pointing="left"
-            openOnFocus selection search  labeled>
+            openOnFocus selection search labeled>
           </Dropdown>
     );
   }

@@ -11,43 +11,40 @@ export default class Headers extends Component {
       "modalOpenSave": false,
       "modalOpenScreenShot": false
     }
-    this.handleOpenSave = this.handleOpenSave.bind(this);
-    this.handleCloseSave = this.handleCloseSave.bind(this);
-    this.handleOpenScreenshot = this.handleOpenScreenshot.bind(this);
-    this.handleCloseScreenshot = this.handleCloseScreenshot.bind(this);
   }
 
-  handleOpenSave() {
+  handleOpenSave = () => {
     this.setState({ modalOpenSave: true });
   }
 
-  handleCloseSave() {
+  handleCloseSave = () => {
     this.setState({ modalOpenSave: false });
   }
 
-  handleOpenScreenshot() {
+  handleOpenScreenshot =() => {
     this.setState({ modalOpenScreenShot: true });
   }
 
-  handleCloseScreenshot() {
+  handleCloseScreenshot = () => {
     this.setState({ modalOpenScreenShot: false });
   }
 
   render() {
     return (
         <header>
-            <div className = "row align-justify">
-                <div className = "columns">
+            <div className="row align-justify">
+                <div >
                     <Link to="/">
-                      <img src = "img/logo.svg" className = "logo" alt="logo"/>
+                      <img src = "img/logo.svg" className="logo" alt="logo"/>
                     </Link>
                 </div>
 
-                <div className = "columns right">
-                  <Link to="/finishedpages" className = "button pill small">Finished Pages</Link>
+                <div className="columns right">
+                  <a className="button pill small" onClick={this.props.handleOptionsSidebar}>Tools</a>
+                  <Link to="/finishedpages" className="button pill small">Finished Pages</Link>
                   <div onClick={this.handleOpenScreenshot}>
                   <Modal
-                      trigger={<a  className = "button pill small">Save</a>}
+                      trigger={<a className="button pill small">Save</a>}
                       open={this.state.handleCloseSave}
                       onClose={this.handleCloseScreenshot}
                       basic
@@ -76,7 +73,7 @@ export default class Headers extends Component {
                       </Grid>
                     </Modal>
                   </div>
-                    <a  className = "sign-out"><i className = "fa fa-user-o"></i> Sign Out</a>
+                    <a className="sign-out"><i className="fa fa-user-o"></i> Sign Out</a>
                 </div>
             </div>
         </header>
