@@ -33,6 +33,7 @@ export default class Modules extends Component {
     const { searchQuery, value } = this.state;
 
     return (
+        <li>
           <Dropdown
             placeholder={`${this.props.moduleName}`}
             something={[this.props.moduleName]}
@@ -44,6 +45,7 @@ export default class Modules extends Component {
             pointing="left"
             openOnFocus selection search labeled>
           </Dropdown>
+        </li>
     );
   }
 }
