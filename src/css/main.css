@@ -5779,9 +5779,8 @@ body {
 .wrapper #menu {
     position: fixed;
     left: 0;
-    top: 26%;
-    z-index: 1001;
-    max-width: 33%
+    top: 50px;
+    max-width: 33%;
 }
 
 .wrapper #menu ul {

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Image, Button, Icon, Sidebar } from 'semantic-ui-react';
+import { Image } from 'semantic-ui-react';
 import Modules from './Modules';
-import SidebarMenu from './SidebarMenu';
 import './css/main.css';
 
 export default class Main extends Component {
@@ -9,7 +8,6 @@ export default class Main extends Component {
     state = { visible: false }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible });
-
     removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
 
     mapModules = () => {
@@ -102,36 +100,30 @@ export default class Main extends Component {
     }
 
     render () {
-        const { sidebarVisibility, handleAddModules } = this.props;
         return (
             <div>
                 <div id="menu">
+                    <ul>
                     {
                         this.generateDropdownModules()
                     }
+                    </ul>
                 </div>
-                <Sidebar.Pushable >
-                    <Sidebar  animation='overlay' direction='top' visible={sidebarVisibility} inverted="true" >
-                       <SidebarMenu resetModules={this.props.resetModules} handleAddModules={handleAddModules}/>
-                    </Sidebar>
-                    <Sidebar.Pusher>
-                        <div>
-                            <main id="main" className="text-center">
-                                <h2>Draggable Module Tool</h2>
-                                    <div id="screenshotarea" className = "row target-body">
-                                        {
-                                            this.props.initialModules.length === 0 ?
-                                            <div className = "destination small-12">
-                                            <div className="module-added">
-                                                <h2>Press Menu to Begin</h2>
-                                                </div>
-                                            </div> : this.generateModuleFields()
-                                        }
-                                    </div>
-                            </main>
-                        </div>
-                    </Sidebar.Pusher>
-                </Sidebar.Pushable>
+                <div>
+                    <main id="main" className="text-center">
+                        <h2>Draggable Module Tool</h2>
+                            <div id="screenshotarea" className = "row target-body">
+                                {
+                                    this.props.initialModules.length === 0 ?
+                                    <div className = "destination small-12">
+                                    <div className="module-added">
+                                        <h2>Press Menu to Begin</h2>
+                                        </div>
+                                    </div> : this.generateModuleFields()
+                                }
+                            </div>
+                    </main>
+                </div>
             </div>
         );
     }

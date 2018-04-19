@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
+import { Sidebar } from 'semantic-ui-react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import Headers from './Header';
+import NewHeader from './NewHeader';
 import FinishedPage from './FinishedPage';
 import Main from './Main';
+import SidebarMenu from './SidebarMenu';
 import './css/main.css';
 
 const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
@@ -32,6 +34,7 @@ export default class App extends Component {
       moduleCount: 0,
       footerCount: 0,
       error: null,
+      test: false
     };
   }
 
@@ -92,39 +95,43 @@ export default class App extends Component {
       author_name: this.state.authorName,
       author_email: this.state.authorEmail,
       project_title: this.state.projectTitle,
-      headerid: this.state.headerSelection.id,
-      moduleid: this.state.moduleSelection.id,
-      footerid: this.state.footerSelection.id
+      // headerid: this.state.headerSelection.id,
+      // moduleid: this.state.moduleSelection.id,
+      // footerid: this.state.footerSelection.id
     }
 
     //REFACTOR
     const generateImage = () => {
       return this.state.initialModules.map(item => {
+        let jsonifyLastItem = JSON.parse(item[item.length-1]);
         if (item.length <= 0) return <div/>
-        return `<img src="${item[item.length-1].url}" alt=""/>)`
-      });
+        console.log(item);
+        return `<img src="${jsonifyLastItem.url}" alt=""/>`
+      }).join("");
     }
+
+    console.log(generateImage())
 
     if (!postData) {
       const error = "No Post Data!"
       this.setState(...this.state.error, {[error]: error});
     }
 
-    wp.finishedPage()
-      .create({
-        title: postData.project_title,
-        content: generateImage(),
-        status: 'publish',
-        tags: ['Finished Page'],
-        fields: postData
-      }).then((res) => {
-        this.setState({
-          dataSaveStatus: res.id
-        })
-      }).catch((err) => {
-        let error = { ...this.state.error, [err]: err}
-        this.setState({error});
-      });
+    // wp.finishedPage()
+    //   .create({
+    //     title: postData.project_title,
+    //     content: generateImage(),
+    //     status: 'publish',
+    //     tags: ['Finished Page'],
+    //     fields: postData
+    //   }).then((res) => {
+    //     this.setState({
+    //       dataSaveStatus: res.id
+    //     })
+    //   }).catch((err) => {
+    //     let error = { ...this.state.error, [err]: err}
+    //     this.setState({error});
+    //   });
   }
 
   grabDataFromWordPress = () => {
@@ -137,11 +144,6 @@ export default class App extends Component {
         });
       }))
       .catch(error => this.setState({ error }));
-  }
-
-  deleteModuleSelection = (e, t) => {
-    console.log(e.target.value)
-    console.log(t)
   }
 
   resetModules = () => {
@@ -227,6 +229,9 @@ export default class App extends Component {
     }));
   }
 
+  handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu})
+
+
   render() {
     const { authorName, authorEmail, projectTitle, previewScreenshot } = this.state;
     const updatedFormValues = {
@@ -234,32 +239,43 @@ export default class App extends Component {
     };
     return (
       <Router>
-        <div className="wrapper">
-          <Headers
-            handleOptionsSidebar={this.handleOptionsSidebar}
-            dataSaveStatus={this.state.dataSaveStatus}
-            updatedFormValues={updatedFormValues}
-            handleName={this.handleFormInput}
-            handleEmail={this.handleFormInput}
-            handleProjectTitle={this.handleFormInput}
-            previewScreenshot={this.previewScreenshot}
-            saveScreenshot={this.saveScreenshot} />
-            <Switch>
-              <Route exact path="/"
-                render={ () =>
-                <Main
-                  deleteModuleSelection={this.deleteModuleSelection}
-                  handleAddModules={this.handleAddModules}
-                  initialModules={this.state.initialModules}
-                  header={this.state.header}
-                  module={this.state.module}
-                  footer={this.state.footer}
-                  dropDown={this.dropDown}
+        <div>
+          <NewHeader
+            handleSideBarMenu={this.handleSideBarMenu} />
+             <Sidebar.Pushable >
+               <Sidebar  animation='overlay' direction='top' visible={this.state.activateSideBarMenu} inverted="true" >
+                <SidebarMenu
                   resetModules={this.resetModules}
-                  sidebarVisibility={this.state.sidebarVisibility} /> }/>
-              <Route path="/finishedpages" component={FinishedPage} />
-              <Route path="*" render={() => <Redirect to="/" />} />
-            </Switch>
+                  handleAddModules={this.handleAddModules}
+                  dataSaveStatus={this.dataSaveStatus}
+                  updatedFormValues={updatedFormValues}
+                  handleName={this.handleFormInput}
+                  handleEmail={this.handleFormInput}
+                  handleProjectTitle={this.handleFormInput}
+                  previewScreenshot={this.previewScreenshot}
+                  saveScreenshot={this.saveScreenshot}
+                />
+               </Sidebar>
+              <Sidebar.Pusher>
+                <div className="wrapper">
+                    <Switch>
+                      <Route exact path="/"
+                        render={ () =>
+                        <Main
+                          handleAddModules={this.handleAddModules}
+                          initialModules={this.state.initialModules}
+                          header={this.state.header}
+                          module={this.state.module}
+                          footer={this.state.footer}
+                          dropDown={this.dropDown}
+                          resetModules={this.resetModules}
+                          sidebarVisibility={this.state.sidebarVisibility} /> }/>
+                      <Route path="/finishedpages" component={FinishedPage} />
+                      <Route path="*" render={() => <Redirect to="/" />} />
+                    </Switch>
+                </div>
+            </Sidebar.Pusher>
+          </Sidebar.Pushable>
         </div>
       </Router>
     );
