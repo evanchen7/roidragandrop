@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Header, Icon, Modal, Grid, Image } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
 import ModalForm from './ModalForm';
 import './css/main.css';
 
@@ -10,46 +11,39 @@ export default class Headers extends Component {
       "modalOpenSave": false,
       "modalOpenScreenShot": false
     }
-    this.handleOpenSave = this.handleOpenSave.bind(this);
-    this.handleCloseSave = this.handleCloseSave.bind(this);
-    this.handleOpenScreenshot = this.handleOpenScreenshot.bind(this);
-    this.handleCloseScreenshot = this.handleCloseScreenshot.bind(this);
   }
 
-  handleOpenSave() {
-    this.setState({ modalOpenSave: true });
-  }
+  handleOpenSave = () => this.setState({ modalOpenSave: true });
 
-  handleCloseSave() {
-    this.setState({ modalOpenSave: false });
-  }
+  handleCloseSave = () => this.setState({ modalOpenSave: false });
 
-  handleOpenScreenshot() {
-    this.setState({ modalOpenScreenShot: true });
-  }
+  handleOpenScreenshot = () => this.setState({ modalOpenScreenShot: true });
 
-  handleCloseScreenshot() {
-    this.setState({ modalOpenScreenShot: false });
-  }
+  handleCloseScreenshot = () => this.setState({ modalOpenScreenShot: false });
+
 
   render() {
     return (
         <header>
-            <div className = "row align-justify">
-                <div className = "columns">
-                    <img src = "img/logo.svg" className = "logo" alt="logo"/>
+            <div className="row align-justify">
+                <div >
+                    <Link to="/">
+                      <img src = "img/logo.svg" className="logo" alt="logo"/>
+                    </Link>
                 </div>
 
-                <div className = "columns right">
+                <div className="columns right">
+                  <Link to="/finishedpages" className="button pill small">Finished Pages</Link>
+                  <a className="button pill small" onClick={this.props.handleOptionsSidebar}>Menu</a>
                   <div onClick={this.handleOpenScreenshot}>
                   <Modal
-                      trigger={<a  className = "button pill small">Save</a>}
+                      trigger={<a className="button pill small">Save</a>}
                       open={this.state.handleCloseSave}
                       onClose={this.handleCloseScreenshot}
                       basic
                       dimmer='blurring'
                       size='large'>
-                      <Header textAlign='center' icon='camera'>
+                      <Header textAlign='center'>
                         <Header.Content>
                         <Icon name='photo' />Save Screenshot
                         </Header.Content>
@@ -72,7 +66,7 @@ export default class Headers extends Component {
                       </Grid>
                     </Modal>
                   </div>
-                    <a  className = "sign-out"><i className = "fa fa-user-o"></i> Sign Out</a>
+                    <a className="sign-out"><i className="fa fa-user-o"></i> Sign Out</a>
                 </div>
             </div>
         </header>

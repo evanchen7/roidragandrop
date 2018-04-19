@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
-import { Image } from 'semantic-ui-react';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import Headers from './Header';
-import Modules from './Modules';
+import FinishedPage from './FinishedPage';
+import Main from './Main';
 import './css/main.css';
 
 const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
@@ -13,9 +14,6 @@ const MODULE = `${apiUrl}/wp-json/wp/v2/module`;
 const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
 const DEVELOPMENTURL =`${apiUrl}/wp-json`;
 
-console.log('Header ', HEADER)
-console.log('APIURL ', apiUrl)
-
 export default class App extends Component {
   constructor() {
     super();
@@ -23,32 +21,25 @@ export default class App extends Component {
       header: [],
       module: [],
       footer: [],
-      headerSelection: null,
-      moduleSelection: null,
-      footerSelection: null,
+      initialModules: [],
       previewScreenshot: {},
       authorName: '',
       authorEmail: '',
       projectTitle: '',
       dataSaveStatus: null,
+      sidebarVisibility: false,
+      headerCount: 0,
+      moduleCount: 0,
+      footerCount: 0,
       error: null,
     };
-    this.grabDataFromWordPress = this.grabDataFromWordPress.bind(this);
-    this.handleHeaderSelection = this.handleHeaderSelection.bind(this);
-    this.handleModuleSelection = this.handleModuleSelection.bind(this);
-    this.handleFooterSelection = this.handleFooterSelection.bind(this);
-    this.previewScreenshot = this.previewScreenshot.bind(this);
-    this.saveScreenshot = this.saveScreenshot.bind(this);
-    this.handleName = this.handleName.bind(this);
-    this.handleEmail = this.handleEmail.bind(this);
-    this.handleProjectTitle = this.handleProjectTitle.bind(this);
   }
 
   componentDidMount() {
     this.grabDataFromWordPress();
   }
 
-  previewScreenshot() {
+  previewScreenshot = () => {
     html2canvas(document.querySelector("#screenshotarea"), { letterRendering: 1, useCORS : true })
       .then(canvas => {
         canvas.id = "canvascapture";
@@ -61,28 +52,33 @@ export default class App extends Component {
     });
   }
 
-  handleName(e) {
+  handleFormInput = (e) => {
     let value = e.target.value;
-    this.setState((prevState, props) => ({
-        authorName: value
-    }));
+    switch (e.target.placeholder) {
+      case "Author Name":
+        return (
+          this.setState((prevState, props) => ({
+            authorName: value
+        }))
+        );
+      case "Author Email":
+        return (
+          this.setState((prevState, props) => ({
+            authorEmail: value
+        }))
+        );
+      case "Project Title":
+        return (
+          this.setState((prevState, props) => ({
+            projectTitle: value
+        }))
+        );
+      default:
+        return null;
+    }
   }
 
-  handleEmail(e) {
-    let value = e.target.value;
-    this.setState((prevState, props) => ({
-        authorEmail: value
-    }));
-  }
-
-  handleProjectTitle(e) {
-    let value = e.target.value;
-    this.setState((prevState, props) => ({
-        projectTitle: value
-    }));
-  }
-
-  saveScreenshot(e) {
+  saveScreenshot = (e) => {
     e.preventDefault();
 
     const wp = new WPAPI({
@@ -100,16 +96,17 @@ export default class App extends Component {
       moduleid: this.state.moduleSelection.id,
       footerid: this.state.footerSelection.id
     }
+
+    //REFACTOR
     const generateImage = () => {
-      return (
-        `<img src=${this.state.headerSelection.url} />
-        <img src=${this.state.moduleSelection.url} />
-        <img src=${this.state.footerSelection.url} />`
-      )
+      return this.state.initialModules.map(item => {
+        if (item.length <= 0) return <div/>
+        return `<img src="${item[item.length-1].url}" alt=""/>)`
+      });
     }
 
     if (!postData) {
-      let error = "No Post Data!"
+      const error = "No Post Data!"
       this.setState(...this.state.error, {[error]: error});
     }
 
@@ -130,7 +127,7 @@ export default class App extends Component {
       });
   }
 
-  grabDataFromWordPress() {
+  grabDataFromWordPress = () => {
     axios.all([ axios.get(HEADER), axios.get(MODULE), axios.get(FOOTER)])
       .then(axios.spread((headerRes, moduleRes, footerRes) => {
         this.setState({
@@ -142,22 +139,92 @@ export default class App extends Component {
       .catch(error => this.setState({ error }));
   }
 
-  handleHeaderSelection(e, selection) {
-    this.setState({
-      "headerSelection": selection.value
-    })
+  deleteModuleSelection = (e, t) => {
+    console.log(e.target.value)
+    console.log(t)
   }
 
-  handleModuleSelection(e, selection) {
+  resetModules = () => {
     this.setState({
-      "moduleSelection": selection.value
-    })
+      initialModules: [],
+      headerCount: 0,
+      moduleCount: 0,
+      footerCount: 0
+    });
   }
 
-  handleFooterSelection(e, selection) {
-    this.setState({
-      "footerSelection": selection.value
-    })
+  handleOptionsSidebar = () => {
+    this.setState({ sidebarVisibility: !this.state.sidebarVisibility });
+  }
+
+  dropDown = (e, t) => {
+    let newArray = this.state.initialModules;
+    let targetModule = t.something[0].toString();
+    let index = newArray.findIndex((item => item[0] === targetModule));
+    let jSON = JSON.stringify({
+      "id": t.value.id,
+      "url": t.value.url,
+      "text": t.value.text
+    });
+    let newValues = [...newArray[index], jSON];
+    newArray[index] = newValues;
+
+    this.setState((prevState, props) => ({
+      initialModules: newArray
+    }));
+
+  }
+
+  handleAddModules = (moduleType) => {
+    const mapModuleType = {
+      "Header": {
+        count: this.state.headerCount,
+        type: "headerCount"
+      },
+      "Module": {
+        count: this.state.moduleCount,
+        type: "moduleCount"
+      },
+      "Footer": {
+        count: this.state.footerCount,
+        type: "footerCount"
+      },
+      "unshift Header": {
+        count: this.state.headerCount,
+        type: "headerCount",
+        unshift: true
+      },
+      "unshift Module": {
+        count: this.state.moduleCount,
+        type: "moduleCount",
+        unshift: true
+      },
+      "unshift Footer": {
+        count: this.state.footerCount,
+        type: "footerCount",
+        unshift: true
+      }
+    };
+
+    let newCount =  mapModuleType[moduleType].count;
+    newCount++;
+
+    let newInitialModules = this.state.initialModules;
+
+    if (mapModuleType[moduleType].hasOwnProperty('unshift')) {
+      let split = moduleType.split(' ');
+      newInitialModules.unshift([`${split[1]}${newCount}`]);
+    } else {
+      newInitialModules.push([`${moduleType}${newCount}`]);
+    }
+
+    let newState = this.state
+    newState[mapModuleType[moduleType].type] = newCount;
+    newState.initialModules = newInitialModules
+
+    this.setState((prevState, props) => ({
+      prevState: newState
+    }));
   }
 
   render() {
@@ -166,62 +233,35 @@ export default class App extends Component {
       authorName, authorEmail, projectTitle, previewScreenshot
     };
     return (
-      <div className="wrapper">
-        <Headers
-          dataSaveStatus={this.state.dataSaveStatus}
-          updatedFormValues={updatedFormValues}
-          handleName={this.handleName}
-          handleEmail={this.handleEmail}
-          handleProjectTitle={this.handleProjectTitle}
-          previewScreenshot={this.previewScreenshot}
-          saveScreenshot={this.saveScreenshot}/>
-      <div id = "menu">
-        <ul>
-          <li>
-            <div >
-              <Modules
-                data={this.state.header}
-                moduleName={"Header"}
-                handleSelection={this.handleHeaderSelection}/>
-              </div>
-          </li>
-          <li>
-            <div >
-              <Modules
-                data={this.state.module}
-                moduleName={"Module"}
-                handleSelection={this.handleModuleSelection}/>
-              </div>
-            </li>
-            <li>
-              <div >
-                <Modules
-                  data={this.state.footer}
-                  moduleName={"Footer"}
-                  handleSelection={this.handleFooterSelection}/>
-                </div>
-            </li>
-          </ul>
+      <Router>
+        <div className="wrapper">
+          <Headers
+            handleOptionsSidebar={this.handleOptionsSidebar}
+            dataSaveStatus={this.state.dataSaveStatus}
+            updatedFormValues={updatedFormValues}
+            handleName={this.handleFormInput}
+            handleEmail={this.handleFormInput}
+            handleProjectTitle={this.handleFormInput}
+            previewScreenshot={this.previewScreenshot}
+            saveScreenshot={this.saveScreenshot} />
+            <Switch>
+              <Route exact path="/"
+                render={ () =>
+                <Main
+                  deleteModuleSelection={this.deleteModuleSelection}
+                  handleAddModules={this.handleAddModules}
+                  initialModules={this.state.initialModules}
+                  header={this.state.header}
+                  module={this.state.module}
+                  footer={this.state.footer}
+                  dropDown={this.dropDown}
+                  resetModules={this.resetModules}
+                  sidebarVisibility={this.state.sidebarVisibility} /> }/>
+              <Route path="/finishedpages" component={FinishedPage} />
+              <Route path="*" render={() => <Redirect to="/" />} />
+            </Switch>
         </div>
-
-           <div>
-            <main id = "main" className="text-center">
-              <h2>Draggable Module Tool</h2>
-              <div id ="screenshotarea" className = "row target-body">
-                <div id = "header" className = "destination small-12">
-                  {this.state.headerSelection ? <Image src={this.state.headerSelection.url}/>: <h2>Header</h2>}
-                </div>
-                <div id = "module" className = "destination small-12">
-                  {this.state.moduleSelection ? <Image src={this.state.moduleSelection.url}/>: <h2>Module</h2>}
-                </div>
-                <div id = "footer" className= "destination small-12">
-                  {this.state.footerSelection ? <Image src={this.state.footerSelection.url}/>: <h2>Footer</h2>}
-                </div>
-              </div>
-            </main>
-          </div>
-      </div>
-
+      </Router>
     );
   }
 }
