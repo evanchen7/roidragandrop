@@ -52,9 +52,7 @@ export default class Main extends Component {
         const mapModuleNames = this.mapModules();
 
         return initialModules.map((mod, index) => {
-            console.log(mod)
             let convert = this.removeNumbers(mod[0]);
-
             return (
                 <div key={index}>
                     <Modules
@@ -89,11 +87,7 @@ export default class Main extends Component {
             return (
                 <div key={index} className = "destination small-12">
                     <div className="module-added">
-                        <div className="remove">
-                            <Button icon  >
-                                <Icon size="small" name="x" />
-                            </Button >
-                        </div>
+
                             {
                                 mod.length <= 1 ? <h2>{ mod[0] }</h2> :
                                 <div>
@@ -112,11 +106,9 @@ export default class Main extends Component {
         return (
             <div>
                 <div id="menu">
-                    <div style={{"clear": "both"}}>
                     {
                         this.generateDropdownModules()
                     }
-                    </div>
                 </div>
                 <Sidebar.Pushable >
                     <Sidebar  animation='overlay' direction='top' visible={sidebarVisibility} inverted="true" >

@@ -139,8 +139,9 @@ export default class App extends Component {
       .catch(error => this.setState({ error }));
   }
 
-  deleteModuleSelection = () => {
-
+  deleteModuleSelection = (e, t) => {
+    console.log(e.target.value)
+    console.log(t)
   }
 
   resetModules = () => {
@@ -247,6 +248,7 @@ export default class App extends Component {
               <Route exact path="/"
                 render={ () =>
                 <Main
+                  deleteModuleSelection={this.deleteModuleSelection}
                   handleAddModules={this.handleAddModules}
                   initialModules={this.state.initialModules}
                   header={this.state.header}
