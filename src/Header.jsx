@@ -13,21 +13,14 @@ export default class Headers extends Component {
     }
   }
 
-  handleOpenSave = () => {
-    this.setState({ modalOpenSave: true });
-  }
+  handleOpenSave = () => this.setState({ modalOpenSave: true });
 
-  handleCloseSave = () => {
-    this.setState({ modalOpenSave: false });
-  }
+  handleCloseSave = () => this.setState({ modalOpenSave: false });
 
-  handleOpenScreenshot =() => {
-    this.setState({ modalOpenScreenShot: true });
-  }
+  handleOpenScreenshot = () => this.setState({ modalOpenScreenShot: true });
 
-  handleCloseScreenshot = () => {
-    this.setState({ modalOpenScreenShot: false });
-  }
+  handleCloseScreenshot = () => this.setState({ modalOpenScreenShot: false });
+
 
   render() {
     return (
@@ -40,8 +33,8 @@ export default class Headers extends Component {
                 </div>
 
                 <div className="columns right">
-                  <a className="button pill small" onClick={this.props.handleOptionsSidebar}>Tools</a>
                   <Link to="/finishedpages" className="button pill small">Finished Pages</Link>
+                  <a className="button pill small" onClick={this.props.handleOptionsSidebar}>Menu</a>
                   <div onClick={this.handleOpenScreenshot}>
                   <Modal
                       trigger={<a className="button pill small">Save</a>}
@@ -50,7 +43,7 @@ export default class Headers extends Component {
                       basic
                       dimmer='blurring'
                       size='large'>
-                      <Header textAlign='center' icon='camera'>
+                      <Header textAlign='center'>
                         <Header.Content>
                         <Icon name='photo' />Save Screenshot
                         </Header.Content>

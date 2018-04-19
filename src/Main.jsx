@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Image, Button, Icon, Header, Menu, Segment, Sidebar } from 'semantic-ui-react';
+import { Image, Button, Icon, Sidebar } from 'semantic-ui-react';
 import Modules from './Modules';
+import SidebarMenu from './SidebarMenu';
 import './css/main.css';
-
-// TODO MAP MODULES
 
 export default class Main extends Component {
 
@@ -11,8 +10,15 @@ export default class Main extends Component {
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible });
 
-    generateModules = () => {
-        const mapModuleNames = {
+    removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
+
+    mapModules = () => {
+        return {
+            "H": {
+                value: "Header",
+                data: this.props.header,
+                handleSelection: this.props.handleHeaderSelection
+            },
             "Header": {
                 value: "Header",
                 data: this.props.header,
@@ -23,136 +29,117 @@ export default class Main extends Component {
                 data: this.props.module,
                 handleSelection: this.props.handleModuleSelection
             },
+            "M": {
+                value: "Module",
+                data: this.props.module,
+                handleSelection: this.props.handleModuleSelection
+            },
             "Footer": {
+                value: "Footer",
+                data: this.props.footer,
+                handleSelection: this.props.handleFooterSelection
+            },
+            "F": {
                 value: "Footer",
                 data: this.props.footer,
                 handleSelection: this.props.handleFooterSelection
             }
         }
+    }
 
-        return this.props.initialModules.map((mod) => {
+    generateDropdownModules = () => {
+        const { initialModules } = this.props;
+        const mapModuleNames = this.mapModules();
+
+        return initialModules.map((mod, index) => {
+            console.log(mod)
+            let convert = this.removeNumbers(mod[0]);
+
             return (
-                <div key={mod}>
+                <div key={index}>
                     <Modules
-                      data={mapModuleNames[mod].data}
-                      moduleName={mod}
-                      handleSelection={mapModuleNames[mod].handleSelection}
+                      dropDown={this.props.dropDown}
+                      data={mapModuleNames[convert].data}
+                      moduleName={[mod[0]]}
                     />
                 </div>
             )
         });
     }
 
-    render () {
-        const { sidebarVisibility } = this.props;
+    generateModuleFields = () => {
+        const { initialModules } = this.props;
 
+        if (!initialModules) {
+            return (
+                <div className = "destination small-12">>
+                    <div className="module-added">
+                      <h2>Press Tools to Begin</h2>
+                    </div>
+                </div>
+            );
+        }
+
+        return initialModules.map((mod, index) => {
+            let parseObj;
+            let lastIndex = mod.length - 1;
+            if (mod.length > 1) {
+               parseObj = JSON.parse(mod[lastIndex])
+            }
+            return (
+                <div key={index} className = "destination small-12">
+                    <div className="module-added">
+                        <div className="remove">
+                            <Button icon  >
+                                <Icon size="small" name="x" />
+                            </Button >
+                        </div>
+                            {
+                                mod.length <= 1 ? <h2>{ mod[0] }</h2> :
+                                <div>
+                                  <h5>{ parseObj.text }</h5>
+                                  <Image src={parseObj.url}/>
+                                </div>
+                            }
+                    </div>
+                </div>
+            );
+        });
+    }
+
+    render () {
+        const { sidebarVisibility, handleAddModules } = this.props;
         return (
             <div>
-                 <div id="menu">
-                    {this.generateModules()}
-
-                        {/* <div>
-                            <Modules
-                                data={this.props.header}
-                                moduleName={"Header"}
-                                handleSelection={this.props.handleHeaderSelection}/>
-                        </div>
-                        <div>
-                            <Modules
-                                data={this.props.module}
-                                moduleName={"Module"}
-                                handleSelection={this.props.handleModuleSelection}/>
-                         </div>
-                         <div>
-                                <Modules
-                                data={this.props.footer}
-                                moduleName={"Footer"}
-                                handleSelection={this.props.handleFooterSelection}/>
-                        </div> */}
-
-                </div>
-            <Sidebar.Pushable >
-                <Sidebar  animation='overlay' direction='top' visible={sidebarVisibility} inverted>
-                    <Menu floated="right"  >
-                        <Menu.Item name='Header' onClick={console.log}>
-                        <Icon name='plus' />
-                            Header
-                        </Menu.Item>
-                        <Menu.Item name='Module' onClick={console.log}>
-                        <Icon name='plus' />
-                            Module
-                        </Menu.Item>
-                        <Menu.Item name='Footer' onClick={console.log}>
-                        <Icon name='plus' />
-                            Footer
-                        </Menu.Item>
-                        <Menu.Item name='Reset' onClick={console.log} >
-                        <Icon name='refresh' />
-                            Reset
-                        </Menu.Item>
-                    </Menu>
-                </Sidebar>
-                <Sidebar.Pusher>
-
-                <div>
-                    <main id="main" className="text-center">
-                    <h2>Draggable Module Tool</h2>
-                    <div id="screenshotarea" className = "row target-body">
-
-                        <div className = "destination small-12">
-                            <div className="module-added">
-                                <div className="remove">
-                                    <Button icon  >
-                                        <Icon size="small" name="x" />
-                                    </Button>
-                                </div>
-                                { this.props.headerSelection ?
-                                    <div>
-                                        <h5>{this.props.headerSelection.text}</h5>
-                                        <Image src={this.props.headerSelection.url}/>
-                                    </div> :
-                                <h2>Header</h2>}
-                            </div>
-                        </div>
-
-                        <div className = "destination small-12">
-                            <div className="module-added">
-                                <div className="remove">
-                                    <Button icon  >
-                                        <Icon size="small" name="x" />
-                                    </Button>
-                                </div>
-                                { this.props.moduleSelection ?
-                                    <div>
-                                        <h5>{this.props.moduleSelection.text}</h5>
-                                        <Image src={this.props.moduleSelection.url}/>
-                                    </div> :
-                                <h2>Module</h2>}
-                            </div>
-                        </div>
-
-                        <div className = "destination small-12">
-                            <div className="module-added">
-                                <div className="remove">
-                                    <Button icon floated >
-                                        <Icon size="small" name="x" />
-                                    </Button>
-                                </div>
-                                { this.props.footerSelection ?
-                                    <div>
-                                        <h5>{this.props.footerSelection.text}</h5>
-                                        <Image src={this.props.footerSelection.url}/>
-                                    </div> :
-                                <h2>Footer</h2>}
-                            </div>
-                        </div>
-
+                <div id="menu">
+                    <div style={{"clear": "both"}}>
+                    {
+                        this.generateDropdownModules()
+                    }
                     </div>
-                    </main>
                 </div>
-
-                </Sidebar.Pusher>
-             </Sidebar.Pushable>
+                <Sidebar.Pushable >
+                    <Sidebar  animation='overlay' direction='top' visible={sidebarVisibility} inverted="true" >
+                       <SidebarMenu resetModules={this.props.resetModules} handleAddModules={handleAddModules}/>
+                    </Sidebar>
+                    <Sidebar.Pusher>
+                        <div>
+                            <main id="main" className="text-center">
+                                <h2>Draggable Module Tool</h2>
+                                    <div id="screenshotarea" className = "row target-body">
+                                        {
+                                            this.props.initialModules.length === 0 ?
+                                            <div className = "destination small-12">
+                                            <div className="module-added">
+                                                <h2>Press Menu to Begin</h2>
+                                                </div>
+                                            </div> : this.generateModuleFields()
+                                        }
+                                    </div>
+                            </main>
+                        </div>
+                    </Sidebar.Pusher>
+                </Sidebar.Pushable>
             </div>
         );
     }

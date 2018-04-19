@@ -10,6 +10,11 @@ export default class Modules extends Component {
     this.setState( { searchQuery });
   }
 
+  handleThis = (e, t) => {
+    console.log(e)
+    console.log("Event ", t)
+  }
+
   render() {
     const convertedData = this.props.data.map((item) => {
       return {
@@ -30,7 +35,8 @@ export default class Modules extends Component {
     return (
           <Dropdown
             placeholder={`${this.props.moduleName}`}
-            onChange={this.props.handleSelection}
+            something={[this.props.moduleName]}
+            onChange={this.props.dropDown}
             onSearchChange={this.handleSearchChange}
             options={convertedData}
             value={value}

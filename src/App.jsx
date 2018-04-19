@@ -21,16 +21,16 @@ export default class App extends Component {
       header: [],
       module: [],
       footer: [],
-      headerSelection: null,
-      moduleSelection: null,
-      footerSelection: null,
-      initialModules: ["Header", "Module", "Footer"],
+      initialModules: [],
       previewScreenshot: {},
       authorName: '',
       authorEmail: '',
       projectTitle: '',
       dataSaveStatus: null,
       sidebarVisibility: false,
+      headerCount: 0,
+      moduleCount: 0,
+      footerCount: 0,
       error: null,
     };
   }
@@ -99,13 +99,10 @@ export default class App extends Component {
 
     //REFACTOR
     const generateImage = () => {
-      // return this.state.map(item => `<img src="${item.url}" alt=""/>)`
-
-      return (
-        `<img src="${this.state.headerSelection.url}" alt=""/>
-        <img src="${this.state.moduleSelection.url}" alt=""/>
-        <img src="${this.state.footerSelection.url}" alt=""/>`
-      )
+      return this.state.initialModules.map(item => {
+        if (item.length <= 0) return <div/>
+        return `<img src="${item[item.length-1].url}" alt=""/>)`
+      });
     }
 
     if (!postData) {
@@ -142,43 +139,90 @@ export default class App extends Component {
       .catch(error => this.setState({ error }));
   }
 
-  handleModuleSelection = (e, selection) => {
-    switch(selection.placeholder) {
-      case 'Header':
-        return ( this.setState((prevState, props) => ({
-          "headerSelection": selection.value
-        }))
-      );
-      case 'Module':
-        return ( this.setState((prevState, props) => ({
-        "moduleSelection": selection.value
-         }))
-      );
-      case 'Footer':
-        return (
-          this.setState((prevState, props) => ({
-            "footerSelection": selection.value
-          }))
-      );
-      default:
-        return null;
-    }
-  }
-
   deleteModuleSelection = () => {
 
+  }
+
+  resetModules = () => {
+    this.setState({
+      initialModules: [],
+      headerCount: 0,
+      moduleCount: 0,
+      footerCount: 0
+    });
   }
 
   handleOptionsSidebar = () => {
     this.setState({ sidebarVisibility: !this.state.sidebarVisibility });
   }
 
-  handleAddModules = (moduleType) => {
-    let newInitialModules = this.state.initialModules;
-    newInitialModules.push(moduleType);
+  dropDown = (e, t) => {
+    let newArray = this.state.initialModules;
+    let targetModule = t.something[0].toString();
+    let index = newArray.findIndex((item => item[0] === targetModule));
+    let jSON = JSON.stringify({
+      "id": t.value.id,
+      "url": t.value.url,
+      "text": t.value.text
+    });
+    let newValues = [...newArray[index], jSON];
+    newArray[index] = newValues;
 
     this.setState((prevState, props) => ({
-      "initialModules": newInitialModules
+      initialModules: newArray
+    }));
+
+  }
+
+  handleAddModules = (moduleType) => {
+    const mapModuleType = {
+      "Header": {
+        count: this.state.headerCount,
+        type: "headerCount"
+      },
+      "Module": {
+        count: this.state.moduleCount,
+        type: "moduleCount"
+      },
+      "Footer": {
+        count: this.state.footerCount,
+        type: "footerCount"
+      },
+      "unshift Header": {
+        count: this.state.headerCount,
+        type: "headerCount",
+        unshift: true
+      },
+      "unshift Module": {
+        count: this.state.moduleCount,
+        type: "moduleCount",
+        unshift: true
+      },
+      "unshift Footer": {
+        count: this.state.footerCount,
+        type: "footerCount",
+        unshift: true
+      }
+    };
+
+    let newCount =  mapModuleType[moduleType].count;
+    newCount++;
+
+    let newInitialModules = this.state.initialModules;
+
+    if (mapModuleType[moduleType].hasOwnProperty('unshift')) {
+      let split = moduleType.split(' ');
+      newInitialModules.unshift([`${split[1]}${newCount}`]);
+    } else {
+      newInitialModules.push([`${moduleType}${newCount}`]);
+    }
+
+    let newState = this.state
+    newState[mapModuleType[moduleType].type] = newCount;
+    newState.initialModules = newInitialModules
+
+    this.setState((prevState, props) => ({
+      prevState: newState
     }));
   }
 
@@ -191,7 +235,6 @@ export default class App extends Component {
       <Router>
         <div className="wrapper">
           <Headers
-            handleAddModules={this.handleAddModules}
             handleOptionsSidebar={this.handleOptionsSidebar}
             dataSaveStatus={this.state.dataSaveStatus}
             updatedFormValues={updatedFormValues}
@@ -204,16 +247,13 @@ export default class App extends Component {
               <Route exact path="/"
                 render={ () =>
                 <Main
+                  handleAddModules={this.handleAddModules}
                   initialModules={this.state.initialModules}
                   header={this.state.header}
                   module={this.state.module}
                   footer={this.state.footer}
-                  handleHeaderSelection={this.handleModuleSelection}
-                  handleModuleSelection={this.handleModuleSelection}
-                  handleFooterSelection={this.handleModuleSelection}
-                  headerSelection={this.state.headerSelection}
-                  moduleSelection={this.state.moduleSelection}
-                  footerSelection={this.state.footerSelection}
+                  dropDown={this.dropDown}
+                  resetModules={this.resetModules}
                   sidebarVisibility={this.state.sidebarVisibility} /> }/>
               <Route path="/finishedpages" component={FinishedPage} />
               <Route path="*" render={() => <Redirect to="/" />} />
