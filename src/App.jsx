@@ -159,14 +159,16 @@ export default class App extends Component {
     this.setState({ sidebarVisibility: !this.state.sidebarVisibility });
   }
 
-  dropDown = (e, t) => {
+  dropDown = (e, data) => {
     let newArray = this.state.initialModules;
-    let targetModule = t.something[0].toString();
+    let targetModule = data.something[0].toString();
     let index = newArray.findIndex((item => item[0] === targetModule));
+
+    console.log(data)
     let jSON = JSON.stringify({
-      "id": t.value.id,
-      "url": t.value.url,
-      "text": t.value.text
+      "id": data.id,
+      "url": data.url,
+      "text": data.text
     });
     let newValues = [...newArray[index], jSON];
     newArray[index] = newValues;

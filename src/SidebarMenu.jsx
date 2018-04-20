@@ -16,7 +16,7 @@ export default class SidebarMenu extends Component {
   render() {
     return (
       <div>
-           <Menu floated="right"  compact="true" size="mini">
+           <Menu floated="right"  compact={true} size="mini">
                 <Menu.Item name='Header' onClick={() => this.props.handleAddModules("Header")}>
                 <Icon name='arrow down' />
                     Header
