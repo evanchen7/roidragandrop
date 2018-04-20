@@ -48,7 +48,7 @@ export default class Modules extends Component {
         <li>
           <Dropdown
             error={!this.state.options}
-            text={value}
+            text={`${value}`}
             open={this.state.dropDownStatus}
             onMouseEnter={this.handleDropDownState}
             onMouseLeave={this.handleDropDownState}

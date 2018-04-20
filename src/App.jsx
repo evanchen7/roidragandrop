@@ -84,8 +84,14 @@ export default class App extends Component {
   saveScreenshot = (e) => {
     e.preventDefault();
 
+    // const wp = new WPAPI({
+    //   endpoint: DEVELOPMENTURL,
+    //   username: 'evan@roidna.com',
+    //   password: 'Gvpix5597!Gvpix5597!',
+    //   auth: true
+    // });
     const wp = new WPAPI({
-      endpoint: DEVELOPMENTURL,
+      endpoint: 'http://54.183.106.255:8000/wp-json',
       username: 'evan@roidna.com',
       password: 'Gvpix5597!Gvpix5597!',
       auth: true
@@ -95,9 +101,6 @@ export default class App extends Component {
       author_name: this.state.authorName,
       author_email: this.state.authorEmail,
       project_title: this.state.projectTitle,
-      // headerid: this.state.headerSelection.id,
-      // moduleid: this.state.moduleSelection.id,
-      // footerid: this.state.footerSelection.id
     }
 
     //REFACTOR
@@ -117,21 +120,29 @@ export default class App extends Component {
       this.setState(...this.state.error, {[error]: error});
     }
 
-    // wp.finishedPage()
-    //   .create({
-    //     title: postData.project_title,
-    //     content: generateImage(),
-    //     status: 'publish',
-    //     tags: ['Finished Page'],
-    //     fields: postData
-    //   }).then((res) => {
-    //     this.setState({
-    //       dataSaveStatus: res.id
-    //     })
-    //   }).catch((err) => {
-    //     let error = { ...this.state.error, [err]: err}
-    //     this.setState({error});
-    //   });
+    wp.finishedPage()
+      .create({
+        title: postData.project_title,
+        content: generateImage(),
+        status: 'publish',
+        tags: ['Finished Page'],
+        fields: postData
+      }).then((res) => {
+        console.log('Response ', res)
+        let savedData = {
+          id: res.id,
+          name: res['author_name'],
+          email: res['author_email'],
+          title: res['project_title'],
+          link: res.link
+        }
+        this.setState({
+          dataSaveStatus: JSON.stringify(savedData)
+        })
+      }).catch((err) => {
+        let error = { ...this.state.error, [err]: err}
+        this.setState({error});
+      });
   }
 
   grabDataFromWordPress = () => {
@@ -233,7 +244,6 @@ export default class App extends Component {
 
   handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu})
 
-
   render() {
     const { authorName, authorEmail, projectTitle, previewScreenshot } = this.state;
     const updatedFormValues = {
@@ -249,7 +259,7 @@ export default class App extends Component {
                 <SidebarMenu
                   resetModules={this.resetModules}
                   handleAddModules={this.handleAddModules}
-                  dataSaveStatus={this.dataSaveStatus}
+                  dataSaveStatus={this.state.dataSaveStatus}
                   updatedFormValues={updatedFormValues}
                   handleName={this.handleFormInput}
                   handleEmail={this.handleFormInput}
