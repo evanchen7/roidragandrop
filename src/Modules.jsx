@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Dropdown } from 'semantic-ui-react';
-import './css/main.css';
 
 export default class Modules extends Component {
 
@@ -10,10 +9,6 @@ export default class Modules extends Component {
     this.setState( { searchQuery });
   }
 
-  handleThis = (e, t) => {
-    console.log(e)
-    console.log("Event ", t)
-  }
 
   render() {
     const convertedData = this.props.data.map((item) => {
