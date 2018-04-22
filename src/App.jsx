@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import html2canvas from 'html2canvas';
 import NewHeader from './NewHeader';
 import FinishedPage from './FinishedPage';
-import Main from './Main';
+import ToolsPage from './ToolsPage';
 import SidebarMenu from './SidebarMenu';
 import './css/main.css';
 
@@ -174,8 +174,6 @@ export default class App extends Component {
     let newArray = this.state.initialModules;
     let targetModule = data.something[0].toString();
     let index = newArray.findIndex((item => item[0] === targetModule));
-
-    console.log(data)
     let jSON = JSON.stringify({
       "id": data.id,
       "url": data.url,
@@ -242,7 +240,21 @@ export default class App extends Component {
     }));
   }
 
-  handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu})
+  handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu});
+
+  handleDeleteModule = (event, target) => {
+    console.log(event.target.value)
+    const value = event.target.value;
+    const updatedModuleList = this.state.initialModules;
+    const index = updatedModuleList.findIndex((item) => {
+      return item[0] === value;
+    });
+    const savedModule = updatedModuleList[index][0];
+    updatedModuleList[index] = [savedModule]
+    this.setState({
+      initialModules: updatedModuleList
+    })
+  }
 
   render() {
     const { authorName, authorEmail, projectTitle, previewScreenshot } = this.state;
@@ -273,7 +285,8 @@ export default class App extends Component {
                     <Switch>
                       <Route exact path="/"
                         render={ () =>
-                        <Main
+                        <ToolsPage
+                          handleDeleteModule={this.handleDeleteModule}
                           handleAddModules={this.handleAddModules}
                           initialModules={this.state.initialModules}
                           header={this.state.header}
