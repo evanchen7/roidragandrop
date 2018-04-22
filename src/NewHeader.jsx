@@ -7,7 +7,7 @@ export default class NewHeader extends Component {
   render() {
     return (
         <div>
-            <Menu inverted="true">
+            <Menu inverted={true}>
                 <Menu.Item as='a' header href='https://www.roidna.com'
                     target='_blank'>
                 <Image

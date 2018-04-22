@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Label, Icon, Modal, Loader, Dimmer } from 'semantic-ui-react';
+import { Button, Form, Label, Icon, Modal, Loader, Dimmer, Message } from 'semantic-ui-react';
 
 export default class ModalForm extends Component {
   render() {
@@ -8,6 +8,9 @@ export default class ModalForm extends Component {
       this.props.updatedFormValues.authorEmail &&
       this.props.updatedFormValues.projectTitle &&
       this.props.updatedFormValues.previewScreenshot !== null;
+    let { dataSaveStatus } = this.props;
+    dataSaveStatus = JSON.parse(dataSaveStatus);
+
     return (
       <Form>
         <Form.Field>
@@ -50,10 +53,22 @@ export default class ModalForm extends Component {
             </Button.Content>
           </Button>}>
           <Modal.Content>
-            { this.props.dataSaveStatus ?
-              <h2>Post: {this.props.dataSaveStatus} saved to WordPress</h2> :
+
+            { console.log(this.props.dataSaveStatus)}
+            { dataSaveStatus ?
+              <Message>
+                <Message.Header>
+                  Your post was saved!
+                </Message.Header>
+                <Message.Item>Post ID: {dataSaveStatus.id}</Message.Item>
+                <Message.Item>Project Title: {dataSaveStatus.title}</Message.Item>
+                <Message.Item>Name: {dataSaveStatus.name}</Message.Item>
+                <Message.Item>Email: {dataSaveStatus.email}</Message.Item>
+                <Message.Item>Find your link at: {dataSaveStatus.link}</Message.Item>
+              </Message>
+              :
               <Dimmer active>
-                <Loader content='Loading' />
+                <Loader inverted content='Saving to server, please wait...' />
               </Dimmer>
             }
           </Modal.Content>

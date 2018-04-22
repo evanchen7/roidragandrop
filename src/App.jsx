@@ -6,7 +6,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-d
 import html2canvas from 'html2canvas';
 import NewHeader from './NewHeader';
 import FinishedPage from './FinishedPage';
-import Main from './Main';
+import ToolsPage from './ToolsPage';
 import SidebarMenu from './SidebarMenu';
 import './css/main.css';
 
@@ -84,8 +84,14 @@ export default class App extends Component {
   saveScreenshot = (e) => {
     e.preventDefault();
 
+    // const wp = new WPAPI({
+    //   endpoint: DEVELOPMENTURL,
+    //   username: 'evan@roidna.com',
+    //   password: 'Gvpix5597!Gvpix5597!',
+    //   auth: true
+    // });
     const wp = new WPAPI({
-      endpoint: DEVELOPMENTURL,
+      endpoint: 'http://54.183.106.255:8000/wp-json',
       username: 'evan@roidna.com',
       password: 'Gvpix5597!Gvpix5597!',
       auth: true
@@ -95,9 +101,6 @@ export default class App extends Component {
       author_name: this.state.authorName,
       author_email: this.state.authorEmail,
       project_title: this.state.projectTitle,
-      // headerid: this.state.headerSelection.id,
-      // moduleid: this.state.moduleSelection.id,
-      // footerid: this.state.footerSelection.id
     }
 
     //REFACTOR
@@ -117,21 +120,29 @@ export default class App extends Component {
       this.setState(...this.state.error, {[error]: error});
     }
 
-    // wp.finishedPage()
-    //   .create({
-    //     title: postData.project_title,
-    //     content: generateImage(),
-    //     status: 'publish',
-    //     tags: ['Finished Page'],
-    //     fields: postData
-    //   }).then((res) => {
-    //     this.setState({
-    //       dataSaveStatus: res.id
-    //     })
-    //   }).catch((err) => {
-    //     let error = { ...this.state.error, [err]: err}
-    //     this.setState({error});
-    //   });
+    wp.finishedPage()
+      .create({
+        title: postData.project_title,
+        content: generateImage(),
+        status: 'publish',
+        tags: ['Finished Page'],
+        fields: postData
+      }).then((res) => {
+        console.log('Response ', res)
+        let savedData = {
+          id: res.id,
+          name: res['author_name'],
+          email: res['author_email'],
+          title: res['project_title'],
+          link: res.link
+        }
+        this.setState({
+          dataSaveStatus: JSON.stringify(savedData)
+        })
+      }).catch((err) => {
+        let error = { ...this.state.error, [err]: err}
+        this.setState({error});
+      });
   }
 
   grabDataFromWordPress = () => {
@@ -159,14 +170,14 @@ export default class App extends Component {
     this.setState({ sidebarVisibility: !this.state.sidebarVisibility });
   }
 
-  dropDown = (e, t) => {
+  dropDown = (e, data) => {
     let newArray = this.state.initialModules;
-    let targetModule = t.something[0].toString();
+    let targetModule = data.something[0].toString();
     let index = newArray.findIndex((item => item[0] === targetModule));
     let jSON = JSON.stringify({
-      "id": t.value.id,
-      "url": t.value.url,
-      "text": t.value.text
+      "id": data.id,
+      "url": data.url,
+      "text": data.text
     });
     let newValues = [...newArray[index], jSON];
     newArray[index] = newValues;
@@ -229,8 +240,21 @@ export default class App extends Component {
     }));
   }
 
-  handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu})
+  handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu});
 
+  handleDeleteModule = (event, target) => {
+    console.log(event.target.value)
+    const value = event.target.value;
+    const updatedModuleList = this.state.initialModules;
+    const index = updatedModuleList.findIndex((item) => {
+      return item[0] === value;
+    });
+    const savedModule = updatedModuleList[index][0];
+    updatedModuleList[index] = [savedModule]
+    this.setState({
+      initialModules: updatedModuleList
+    })
+  }
 
   render() {
     const { authorName, authorEmail, projectTitle, previewScreenshot } = this.state;
@@ -247,7 +271,7 @@ export default class App extends Component {
                 <SidebarMenu
                   resetModules={this.resetModules}
                   handleAddModules={this.handleAddModules}
-                  dataSaveStatus={this.dataSaveStatus}
+                  dataSaveStatus={this.state.dataSaveStatus}
                   updatedFormValues={updatedFormValues}
                   handleName={this.handleFormInput}
                   handleEmail={this.handleFormInput}
@@ -261,7 +285,8 @@ export default class App extends Component {
                     <Switch>
                       <Route exact path="/"
                         render={ () =>
-                        <Main
+                        <ToolsPage
+                          handleDeleteModule={this.handleDeleteModule}
                           handleAddModules={this.handleAddModules}
                           initialModules={this.state.initialModules}
                           header={this.state.header}

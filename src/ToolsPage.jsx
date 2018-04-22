@@ -3,7 +3,7 @@ import { Image } from 'semantic-ui-react';
 import Modules from './Modules';
 import './css/main.css';
 
-export default class Main extends Component {
+export default class ToolsPage extends Component {
 
     state = { visible: false }
 
@@ -52,11 +52,11 @@ export default class Main extends Component {
         return initialModules.map((mod, index) => {
             let convert = this.removeNumbers(mod[0]);
             return (
-                <div key={index}>
+                <div key={mod[0]}>
                     <Modules
                       dropDown={this.props.dropDown}
                       data={mapModuleNames[convert].data}
-                      moduleName={[mod[0]]}
+                      moduleName={mod[0]}
                     />
                 </div>
             )
@@ -83,15 +83,21 @@ export default class Main extends Component {
                parseObj = JSON.parse(mod[lastIndex])
             }
             return (
-                <div key={index} className = "destination small-12">
+                <div key={mod[0]} className = "destination small-12">
                     <div className="module-added">
-
                             {
                                 mod.length <= 1 ? <h2>{ mod[0] }</h2> :
                                 <div>
                                   <h5>{ parseObj.text }</h5>
                                   <Image src={parseObj.url}/>
+                                  <button
+                                    value={mod[0]}
+                                    onClick={this.props.handleDeleteModule}
+                                    >Delete
+                                  </button>
                                 </div>
+
+
                             }
                     </div>
                 </div>
