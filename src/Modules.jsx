@@ -54,7 +54,7 @@ export default class Modules extends Component {
             onMouseLeave={this.handleDropDownState}
             icon='filter'
             className='icon'
-            fluid labeled button scrolling
+            fluid labeled button
             >
             <Dropdown.Menu>
             {
