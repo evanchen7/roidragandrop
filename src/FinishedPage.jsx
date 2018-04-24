@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
+// import _ from 'lodash';
 import './css/finishedpage.css';
 import WPAPI from 'wpapi';
 
 // const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
-
 // const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+
 const wp = new WPAPI({
   endpoint: 'http://54.183.106.255:8000/wp-json',
   username: 'evan@roidna.com',
