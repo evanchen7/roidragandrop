@@ -4,7 +4,7 @@ import WPAPI from 'wpapi';
 import { Sidebar } from 'semantic-ui-react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import NewHeader from './NewHeader';
+import Header from './Header';
 import FinishedPage from './FinishedPage';
 import ToolsPage from './ToolsPage';
 import SidebarMenu from './SidebarMenu';
@@ -15,6 +15,7 @@ const HEADER = `${apiUrl}/wp-json/wp/v2/header`;
 const MODULE = `${apiUrl}/wp-json/wp/v2/module`;
 const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
 const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+
 
 export default class App extends Component {
   constructor() {
@@ -91,7 +92,7 @@ export default class App extends Component {
     //   auth: true
     // });
     const wp = new WPAPI({
-      endpoint: 'http://54.183.106.255:8000/wp-json',
+      endpoint: DEVELOPMENTURL,
       username: 'evan@roidna.com',
       password: 'Gvpix5597!Gvpix5597!',
       auth: true
@@ -146,12 +147,51 @@ export default class App extends Component {
   }
 
   grabDataFromWordPress = () => {
-    axios.all([ axios.get(HEADER), axios.get(MODULE), axios.get(FOOTER)])
+
+    const getRequest = (request_url) => new Promise((resolve, reject) => {
+
+      // START WITH SMALL ARBITRARY REQUEST TO GET TOTAL NUMBER OF POSTS FAST
+      axios.get(request_url).then(
+        (apiData) => {
+          // SETUP FOR PROMISE.ALL()
+          let promiseArray = [];
+
+          // COMPUTE HOW MANY REQUESTS WE NEED
+          // ALWAYS ROUND TOTAL NUMBER OF PAGES UP TO GET ALL THE DATA
+          const totalPages = Math.ceil(apiData.headers['x-wp-totalpages']);
+
+
+          for (let i = 1; i <= totalPages; i++) {
+            promiseArray.push( axios.get(`${request_url}?page=${i}`) )
+          };
+
+          resolve(
+            Promise.all(promiseArray)
+                   .then((resolvedArray) => {
+
+                     // PUSH IT ALL INTO A SINGLE ARRAY
+                     let compiledPosts = [];
+
+                     resolvedArray.forEach((axios_response) => {
+                       // AXIOS MAKES US ACCESS W/RES.DATA
+                       axios_response.data.forEach((post) => {
+                         compiledPosts.push(post);
+                       })
+                     });
+
+                     // RETURN AN ARRAY OF ALL POSTS REGARDLESS OF LENGTH
+                     return compiledPosts;
+                   }).catch((e) => { console.log('ERROR'); reject(e);})
+           )
+        }
+      ).catch((e) => { console.log('ERROR'); reject(e);})
+    });
+    axios.all([ getRequest(HEADER), getRequest(MODULE), getRequest(FOOTER)])
       .then(axios.spread((headerRes, moduleRes, footerRes) => {
         this.setState({
-          header: headerRes.data,
-          module: moduleRes.data,
-          footer: footerRes.data
+          header: headerRes,
+          module: moduleRes,
+          footer: footerRes
         });
       }))
       .catch(error => this.setState({ error }));
@@ -177,9 +217,13 @@ export default class App extends Component {
     let jSON = JSON.stringify({
       "id": data.id,
       "url": data.url,
-      "text": data.text
+      "text": data.text,
+      "tags": data.tags
     });
+    console.log(data)
+    console.log(index, targetModule)
     let newValues = [...newArray[index], jSON];
+    console.log(newArray)
     newArray[index] = newValues;
 
     this.setState((prevState, props) => ({
@@ -243,8 +287,7 @@ export default class App extends Component {
   handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu});
 
   handleDeleteModule = (event, target) => {
-    console.log(event.target.value)
-    const value = event.target.value;
+    const value = event;
     const updatedModuleList = this.state.initialModules;
     const index = updatedModuleList.findIndex((item) => {
       return item[0] === value;
@@ -263,8 +306,8 @@ export default class App extends Component {
     };
     return (
       <Router>
-        <div>
-          <NewHeader
+        <div className='wrapper'>
+          <Header
             handleSideBarMenu={this.handleSideBarMenu} />
              <Sidebar.Pushable >
                <Sidebar  animation='overlay' direction='top' visible={this.state.activateSideBarMenu} inverted="true" >
@@ -281,7 +324,7 @@ export default class App extends Component {
                 />
                </Sidebar>
               <Sidebar.Pusher>
-                <div className="wrapper">
+                <div>
                     <Switch>
                       <Route exact path="/"
                         render={ () =>
