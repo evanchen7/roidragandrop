@@ -10,7 +10,7 @@ export default class Headers extends Component {
             <div className="row align-justify">
                 <div >
                     <Link to="/">
-                      <img src = "img/logo.svg" className="logo" alt="logo"/>
+                      <img src = "./img/logo.svg" className="logo" alt="logo"/>
                     </Link>
                 </div>
 
