@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Dropdown, Input } from 'semantic-ui-react';
+import Background from './img/add-button.svg';
 import './css/main.css';
+
+
 
 export default class OldModules extends Component {
 
@@ -84,7 +87,7 @@ export default class OldModules extends Component {
       "background": "#8cc800"
     }
     const style2 = {
-      "background": "url(../img/add-button.svg) no-repeat center center",
+      "background": `url(${Background}) no-repeat center center`,
       "padding": "0px 10px"
     }
     return (
