@@ -5707,7 +5707,7 @@ img {
 }
 
 * {
-    font-family: Lato
+    /* font-family: Lato */
 }
 
 body {
@@ -5795,6 +5795,7 @@ body {
     display: flex;
     -webkit-box-align: start;
     -ms-flex-align: start;
+    text-align: center;
     align-items: flex-start;
     cursor: pointer
 }
@@ -5822,7 +5823,7 @@ body {
 }
 
 .wrapper #menu ul li:hover a {
-    padding-right: 50px
+    padding-right: 10px
 }
 
 .wrapper #menu ul li .menu-content {
@@ -5982,7 +5983,7 @@ body {
 }
 
 .wrapper main#main>.row .destination h2 {
-    padding: 150px 0;
+    padding: 200px 0;
     color: #dfdfdf
 }
 

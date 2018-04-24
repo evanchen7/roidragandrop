@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Dropdown, Input } from 'semantic-ui-react';
+import './css/main.css';
 
 export default class Modules extends Component {
 
@@ -28,7 +29,8 @@ export default class Modules extends Component {
         "id": item.id,
         "image": {
           "src": item.acf.image_upload.sizes.thumbnail
-        }
+        },
+        "tags": item.acf.tags.map((tag) => tag.name)
       };
     });
     const options = transformData();

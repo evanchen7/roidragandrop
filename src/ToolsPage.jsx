@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Image } from 'semantic-ui-react';
-import Modules from './Modules';
+import { Icon } from 'semantic-ui-react';
+import OldModules from './OldModules';
 import './css/main.css';
 
 export default class ToolsPage extends Component {
@@ -53,10 +53,11 @@ export default class ToolsPage extends Component {
             let convert = this.removeNumbers(mod[0]);
             return (
                 <div key={mod[0]}>
-                    <Modules
+                    <OldModules
                       dropDown={this.props.dropDown}
                       data={mapModuleNames[convert].data}
                       moduleName={mod[0]}
+                      moduleName1={this.removeNumbers(mod[0])}
                     />
                 </div>
             )
@@ -88,13 +89,9 @@ export default class ToolsPage extends Component {
                             {
                                 mod.length <= 1 ? <h2>{ mod[0] }</h2> :
                                 <div>
+                                  <Icon name='close' style={{"position":"absolute", "top":"-1px", "right":"1px", "padding": "2px"}} onClick={() => this.props.handleDeleteModule(mod[0])}/>
                                   <h5>{ parseObj.text }</h5>
-                                  <Image src={parseObj.url}/>
-                                  <button
-                                    value={mod[0]}
-                                    onClick={this.props.handleDeleteModule}
-                                    >Delete
-                                  </button>
+                                  <img src={parseObj.url} alt="nothing"/>
                                 </div>
 
 
@@ -110,12 +107,10 @@ export default class ToolsPage extends Component {
             <div>
                 <div id="menu">
                     <ul>
-                    {
-                        this.generateDropdownModules()
-                    }
+                      { this.generateDropdownModules() }
                     </ul>
                 </div>
-                <div>
+
                     <main id="main" className="text-center">
                         <h2>Draggable Module Tool</h2>
                             <div id="screenshotarea" className = "row target-body">
@@ -123,13 +118,13 @@ export default class ToolsPage extends Component {
                                     this.props.initialModules.length === 0 ?
                                     <div className = "destination small-12">
                                     <div className="module-added">
-                                        <h2>Press Menu to Begin</h2>
+                                        <h2>Press Save to Begin</h2>
                                         </div>
                                     </div> : this.generateModuleFields()
                                 }
                             </div>
                     </main>
-                </div>
+
             </div>
         );
     }
