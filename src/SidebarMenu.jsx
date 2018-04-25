@@ -52,6 +52,7 @@ export default class SidebarMenu extends Component {
             </Menu>
             <Confirm
                 open={this.state.open}
+                header='Resets all modules'
                 onConfirm={ () => { this.props.resetModules();  this.handleCancel()} }
                 onCancel={this.handleCancel}
             />
