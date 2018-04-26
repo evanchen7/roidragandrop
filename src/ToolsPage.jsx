@@ -5,7 +5,7 @@ import './css/main.css';
 
 export default class ToolsPage extends Component {
 
-    state = { visible: false }
+    state = { visible: false, xValue: false }
 
     toggleVisibility = () => this.setState({ visible: !this.state.visible });
     removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
@@ -46,7 +46,7 @@ export default class ToolsPage extends Component {
     }
 
     generateDropdownModules = () => {
-        const { initialModules } = this.props;
+        const { initialModules, handleAddModuleOnly, dropDown } = this.props;
         const mapModuleNames = this.mapModules();
 
         return initialModules.map((mod, index) => {
@@ -54,7 +54,8 @@ export default class ToolsPage extends Component {
             return (
                 <div key={mod[0]}>
                     <OldModules
-                      dropDown={this.props.dropDown}
+                      handleAddModuleOnly={handleAddModuleOnly}
+                      dropDown={dropDown}
                       data={mapModuleNames[convert].data}
                       moduleName={mod[0]}
                       moduleName1={this.removeNumbers(mod[0])}
@@ -64,8 +65,11 @@ export default class ToolsPage extends Component {
         });
     }
 
+    handleX = () => this.setState({"xValue": !this.state.xValue});
+
     generateModuleFields = () => {
         const { initialModules } = this.props;
+        const { xValue } = this.state;
 
         if (!initialModules) {
             return (
@@ -88,13 +92,13 @@ export default class ToolsPage extends Component {
                     <div className="module-added">
                             {
                                 mod.length <= 1 ? <h2>{ mod[0] }</h2> :
-                                <div>
-                                  <Icon name='close' style={{"position":"absolute", "top":"-1px", "right":"1px", "padding": "2px"}} onClick={() => this.props.handleDeleteModule(mod[0])}/>
+                                <div >
+                                  <Icon name='close'
+                                     style={{"position":"absolute", "top":"-1px", "right":"1px", "padding": "2px", "display": `${xValue ? `block`: `none`} `}}
+                                     onClick={() => this.props.handleDeleteModule(mod[0])}/>
                                   <h5>{ parseObj.text }</h5>
-                                  <img src={parseObj.url} alt="nothing"/>
+                                  <img onMouseOver={this.handleX} src={parseObj.url} alt="nothing"/>
                                 </div>
-
-
                             }
                     </div>
                 </div>
@@ -118,7 +122,7 @@ export default class ToolsPage extends Component {
                                     this.props.initialModules.length === 0 ?
                                     <div className = "destination small-12">
                                     <div className="module-added">
-                                        <h2>Press Save to Begin</h2>
+                                        <h2>Press Tools to Begin</h2>
                                         </div>
                                     </div> : this.generateModuleFields()
                                 }

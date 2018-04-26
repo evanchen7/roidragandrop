@@ -14,6 +14,7 @@ export default class Modules extends Component {
   handleDropDownState = () => this.setState({ dropDownStatus: !this.state.dropDownStatus });
 
   handleInput = (event, data) => {
+    console.log(data)
     let options = this.state.options.filter((item) => {
       return item.text.toLowerCase().indexOf(data.value.toLowerCase()) > -1;
     })

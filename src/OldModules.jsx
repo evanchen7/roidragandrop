@@ -3,8 +3,6 @@ import { Dropdown, Input } from 'semantic-ui-react';
 import Background from './img/add-button.svg';
 import './css/main.css';
 
-
-
 export default class OldModules extends Component {
 
   state = {
@@ -15,12 +13,16 @@ export default class OldModules extends Component {
     showClass: "open"
   }
 
+  handleDropDownState = () => this.setState({ dropDownStatus: !this.state.dropDownStatus });
+  handleClass = () => this.setState({ classStatus: !this.state.classStatus });
+  removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
+  forceLeave = () => this.setState({ dropDownStatus: false});
+
   changeField = (e, data) => {
     this.setState( { value: data.text} );
     this.props.dropDown(e, data);
   }
 
-  handleDropDownState = () => this.setState({ dropDownStatus: !this.state.dropDownStatus });
 
   handleInput = (event, data) => {
     let options = this.state.options.filter((item) => {
@@ -67,20 +69,18 @@ export default class OldModules extends Component {
     })
   }
 
-  handleClass = () => {
-    this.setState({
-      classStatus: !this.state.classStatus
-    })
+  checkIfModule = () => {
+    if (this.removeNumbers(this.state.value) === "Module") {
+      this.props.handleAddModuleOnly("Module")
+    }
   }
-  removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
-  forceLeave = () => this.setState({ dropDownStatus: false});
 
   componentDidMount() {
     this.loadTransformProps();
   }
 
   render() {
-    const { value, classStatus, showClass } = this.state;
+    const { value } = this.state;
     const style1 = {
       "padding": "7px 15px 6px",
       "marginRight": "2px",
@@ -92,20 +92,20 @@ export default class OldModules extends Component {
     }
     return (
         <li>
-          <div onClick={this.handleDropDownState} style={style1}><i style={style2}/></div>
-          <div onClick={this.handleDropDownState} className={`menu-content ${classStatus ? showClass : ""}`}>
-            <a  className='menu-open-link' onClick={() => {this.handleDropDownState()}}>
+          <div onClick={this.handleDropDownState} style={style1}>
+            <i style={style2} onClick={this.checkIfModule} />
+          </div>
+          <div onClick={this.handleDropDownState} className='menu-content'>
+            <a  className='menu-open-link' >
 
                 <Dropdown
-                error={!this.state.options}
                 text={`${value}`}
-                open={this.state.dropDownStatus}
-                // onMouseEnter={this.handleDropDownState}
-                // onMouseLeave={this.forceLeave}
-                icon=''
+                onClick={() => {this.handleDropDownState()}}
+                fluid
+                floating
                 labeled
                 as='div'
-                // style={{"float":"top"}}
+                direction='right'
                 >
                 <Dropdown.Menu>
                 {
