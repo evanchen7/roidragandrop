@@ -5779,8 +5779,9 @@ body {
 .wrapper #menu {
     position: fixed;
     left: 0;
-    top: 50px;
+    top: 26%;
     max-width: 33%;
+    z-index: 1001;
 }
 
 .wrapper #menu ul {
@@ -5788,7 +5789,7 @@ body {
 }
 
 .wrapper #menu ul li {
-    position: relative;
+    /* position: relative; */
     margin-bottom: 5px;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -5817,13 +5818,15 @@ body {
     color: #fff;
     background: #333;
     display: inline-block;
+    width: 200px;
+    /* width: 120%; */
     min-width: 65px;
     -webkit-transition: 0.25s all;
     transition: 0.25s all
 }
 
 .wrapper #menu ul li:hover a {
-    padding-right: 10px
+    background: grey;
 }
 
 .wrapper #menu ul li .menu-content {
@@ -5983,7 +5986,7 @@ body {
 }
 
 .wrapper main#main>.row .destination h2 {
-    padding: 200px 0;
+    padding: 150px 0;
     color: #dfdfdf
 }
 

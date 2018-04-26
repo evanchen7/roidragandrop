@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
-import { Sidebar } from 'semantic-ui-react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
-import Header from './Header';
+import OldHeader from './OldHeader';
 import FinishedPage from './FinishedPage';
 import ToolsPage from './ToolsPage';
-import SidebarMenu from './SidebarMenu';
 import './css/main.css';
 
 const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
@@ -31,9 +29,9 @@ export default class App extends Component {
       projectTitle: '',
       dataSaveStatus: null,
       sidebarVisibility: false,
-      headerCount: 0,
-      moduleCount: 0,
-      footerCount: 0,
+      headerCount: 1,
+      moduleCount: 1,
+      footerCount: 1,
       error: null,
       test: false
     };
@@ -46,6 +44,7 @@ export default class App extends Component {
   previewScreenshot = () => {
     html2canvas(document.querySelector("#screenshotarea"), { letterRendering: 1, useCORS : true })
       .then(canvas => {
+        console.log(canvas);
         canvas.id = "canvascapture";
         let dataURL = canvas.toDataURL('image/png', 1.0);
         document.querySelector("#newScreenshot").src = dataURL;
@@ -85,12 +84,6 @@ export default class App extends Component {
   saveScreenshot = (e) => {
     e.preventDefault();
 
-    // const wp = new WPAPI({
-    //   endpoint: DEVELOPMENTURL,
-    //   username: 'evan@roidna.com',
-    //   password: 'Gvpix5597!Gvpix5597!',
-    //   auth: true
-    // });
     const wp = new WPAPI({
       endpoint: DEVELOPMENTURL,
       username: 'evan@roidna.com',
@@ -191,7 +184,8 @@ export default class App extends Component {
         this.setState({
           header: headerRes,
           module: moduleRes,
-          footer: footerRes
+          footer: footerRes,
+          initialModules: [["Header1"], ["Module1"], ["Footer1"]]
         });
       }))
       .catch(error => this.setState({ error }));
@@ -284,6 +278,35 @@ export default class App extends Component {
     }));
   }
 
+  handleAddModuleOnly = (moduleType) => {
+    const mapModuleType = {
+      "Module": {
+        count: this.state.moduleCount,
+        type: "moduleCount"
+      },
+      "unshift Module": {
+        count: this.state.moduleCount,
+        type: "moduleCount",
+        unshift: true
+      }
+    };
+
+    let newCount =  mapModuleType[moduleType].count;
+    newCount++;
+    let newInitialModules = this.state.initialModules;
+    let secondToLast = newInitialModules.length-1;
+
+    newInitialModules.splice(secondToLast, 0, [`${moduleType}${newCount}`]);
+
+    let newState = this.state
+    newState[mapModuleType[moduleType].type] = newCount;
+    newState.initialModules = newInitialModules
+
+    this.setState((prevState, props) => ({
+      prevState: newState
+    }));
+  }
+
   handleSideBarMenu = () => this.setState({ activateSideBarMenu: !this.state.activateSideBarMenu});
 
   handleDeleteModule = (event, target) => {
@@ -307,28 +330,23 @@ export default class App extends Component {
     return (
       <Router>
         <div className='wrapper'>
-          <Header
+          <OldHeader
+            resetModules={this.resetModules}
+            handleAddModules={this.handleAddModules}
+            dataSaveStatus={this.state.dataSaveStatus}
+            updatedFormValues={updatedFormValues}
+            handleName={this.handleFormInput}
+            handleEmail={this.handleFormInput}
+            handleProjectTitle={this.handleFormInput}
+            previewScreenshot={this.previewScreenshot}
+            saveScreenshot={this.saveScreenshot}
             handleSideBarMenu={this.handleSideBarMenu} />
-             <Sidebar.Pushable >
-               <Sidebar  animation='overlay' direction='top' visible={this.state.activateSideBarMenu} inverted="true" >
-                <SidebarMenu
-                  resetModules={this.resetModules}
-                  handleAddModules={this.handleAddModules}
-                  dataSaveStatus={this.state.dataSaveStatus}
-                  updatedFormValues={updatedFormValues}
-                  handleName={this.handleFormInput}
-                  handleEmail={this.handleFormInput}
-                  handleProjectTitle={this.handleFormInput}
-                  previewScreenshot={this.previewScreenshot}
-                  saveScreenshot={this.saveScreenshot}
-                />
-               </Sidebar>
-              <Sidebar.Pusher>
                 <div>
                     <Switch>
                       <Route exact path="/"
                         render={ () =>
                         <ToolsPage
+                          handleAddModuleOnly={this.handleAddModuleOnly}
                           handleDeleteModule={this.handleDeleteModule}
                           handleAddModules={this.handleAddModules}
                           initialModules={this.state.initialModules}
@@ -337,13 +355,12 @@ export default class App extends Component {
                           footer={this.state.footer}
                           dropDown={this.dropDown}
                           resetModules={this.resetModules}
-                          sidebarVisibility={this.state.sidebarVisibility} /> }/>
-                      <Route path="/finishedpages" component={FinishedPage} />
+                          sidebarVisibility={this.state.sidebarVisibility} />
+                         }/>
+                     <Route path="/finishedpages" component={FinishedPage} />
                       <Route path="*" render={() => <Redirect to="/" />} />
                     </Switch>
                 </div>
-            </Sidebar.Pusher>
-          </Sidebar.Pushable>
         </div>
       </Router>
     );
