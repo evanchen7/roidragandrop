@@ -101,15 +101,11 @@ export default class OldModules extends Component {
                 <Dropdown
                 text={`${value}`}
                 onClick={() => {this.handleDropDownState()}}
-                // open={this.state.dropDownStatus}
-                // onMouseEnter={this.handleDropDownState}
-                // onMouseLeave={this.forceLeave}
-                // icon=''
+                fluid
                 floating
                 labeled
                 as='div'
-                pointing='top left'
-                style={{"float":"top"}}
+                direction='right'
                 >
                 <Dropdown.Menu>
                 {

@@ -5818,8 +5818,8 @@ body {
     color: #fff;
     background: #333;
     display: inline-block;
-    width: 200px;
-    /* width: 120%; */
+    width: 150px;
+    text-align: right;
     min-width: 65px;
     -webkit-transition: 0.25s all;
     transition: 0.25s all

@@ -42,7 +42,7 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-    html2canvas(document.querySelector("#screenshotarea"), { letterRendering: 1, useCORS : true })
+    html2canvas(document.querySelector("#screenshotarea"), {  useCORS: true })
       .then(canvas => {
         console.log(canvas);
         canvas.id = "canvascapture";
