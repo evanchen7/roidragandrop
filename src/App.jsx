@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import html2canvas from 'html2canvas';
+import domtoimage from 'dom-to-image';
 import OldHeader from './OldHeader';
 import FinishedPage from './FinishedPage';
 import ToolsPage from './ToolsPage';
@@ -42,23 +42,19 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-    const options = {
-      'proxy': 'http://localhost:8080/',
+    const targetNode = document.querySelector('main');
+    const modalNode = document.querySelector('#newScreenshot');
 
-      // allowTaint: true,
-      'logging': true
-    }
 
-    html2canvas(document.querySelector("#screenshotarea"), options)
-      .then(canvas => {
-        console.log(canvas);
-        // canvas.id = "canvascapture";
-        let dataURL = canvas.toDataURL('image/png', 1.0);
-        document.querySelector("#newScreenshot").src = dataURL;
-        return dataURL;
+
+    domtoimage.toPng(targetNode, {
+      bgcolor: 'white'
+    }).then((dataUrl) => {
+      modalNode.crossOrigin = "Anonymous";
+      modalNode.src = dataUrl
     }).catch((err) => {
-      let error = { ...this.state.error, [err]: err}
-      this.setState({error});
+        let error = { ...this.state.error, [err]: err}
+        this.setState({error});
     });
   }
 
@@ -104,7 +100,6 @@ export default class App extends Component {
       project_title: this.state.projectTitle,
     }
 
-    //REFACTOR
     const generateImage = () => {
       return this.state.initialModules.map(item => {
         let jsonifyLastItem = JSON.parse(item[item.length-1]);
