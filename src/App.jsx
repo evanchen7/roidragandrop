@@ -42,10 +42,17 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-    html2canvas(document.querySelector("#screenshotarea"), {  useCORS: true })
+    const options = {
+      'proxy': 'http://localhost:8080/',
+
+      // allowTaint: true,
+      'logging': true
+    }
+
+    html2canvas(document.querySelector("#screenshotarea"), options)
       .then(canvas => {
         console.log(canvas);
-        canvas.id = "canvascapture";
+        // canvas.id = "canvascapture";
         let dataURL = canvas.toDataURL('image/png', 1.0);
         document.querySelector("#newScreenshot").src = dataURL;
         return dataURL;
