@@ -1,16 +1,13 @@
 require('dotenv').config();
-const express = require('express');
-const path = require('path');
-const cors = require('cors');
-const app = express();
-const proxy = require('html2canvas-proxy');
-
-const PORT = process.env.PORT || 5000;
+const express = require('express'),
+      path = require('path'),
+      cors = require('cors'),
+      app = express(),
+      PORT = process.env.PORT || 5000;
 
 //Middleware
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(cors());
-app.use(proxy());
 
 //GET Routes
 app.get('/', (req, res) => {
