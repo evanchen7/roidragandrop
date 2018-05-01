@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import WPAPI from 'wpapi';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import domtoimage from 'dom-to-image';
+import html2canvas from 'html2canvas';
 import OldHeader from './OldHeader';
 import FinishedPage from './FinishedPage';
 import ToolsPage from './ToolsPage';
@@ -42,20 +42,27 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-    const targetNode = document.querySelector('main');
+
+    const targetNode = document.querySelector('#targetScreenshot');
     const modalNode = document.querySelector('#newScreenshot');
 
+    html2canvas(targetNode, { useCORS:true }).then((canvas) => {
+      canvas = canvas.toDataURL("image/png");
+      modalNode.src = canvas
+      // document.body.appendChild(canvas);
+    })
 
+    // domtoimage.toPng(targetNode, {
+    //   bgcolor: 'white'
+    // }).then((dataUrl) => {
 
-    domtoimage.toPng(targetNode, {
-      bgcolor: 'white'
-    }).then((dataUrl) => {
-      modalNode.crossOrigin = "Anonymous";
-      modalNode.src = dataUrl
-    }).catch((err) => {
-        let error = { ...this.state.error, [err]: err}
-        this.setState({error});
-    });
+    //   modalNode.crossOrigin = "Anonymous";
+    //   modalNode.src = dataUrl;
+
+    // }).catch((err) => {
+    //     let error = { ...this.state.error, [err]: err}
+    //     this.setState({error});
+    // });
   }
 
   handleFormInput = (e) => {
