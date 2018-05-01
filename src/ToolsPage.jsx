@@ -117,7 +117,7 @@ export default class ToolsPage extends Component {
 
                     <main id="main" className="text-center">
                         <h2>Draggable Module Tool</h2>
-                            <div id="screenshotarea" className = "row target-body">
+                            <div id="targetScreenshot" className = "row target-body">
                                 {
                                     this.props.initialModules.length === 0 ?
                                     <div className = "destination small-12">

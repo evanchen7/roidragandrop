@@ -13,7 +13,10 @@ const HEADER = `${apiUrl}/wp-json/wp/v2/header`;
 const MODULE = `${apiUrl}/wp-json/wp/v2/module`;
 const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
 const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+const USER = process.env.REACT_APP_USERNAME;
+const PASSWORD = process.env.REACT_APP_PASSWORD;
 
+console.log('USER', USER, PASSWORD)
 
 export default class App extends Component {
   constructor() {
@@ -42,17 +45,17 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-    html2canvas(document.querySelector("#screenshotarea"), {  useCORS: true })
-      .then(canvas => {
-        console.log(canvas);
-        canvas.id = "canvascapture";
-        let dataURL = canvas.toDataURL('image/png', 1.0);
-        document.querySelector("#newScreenshot").src = dataURL;
-        return dataURL;
-    }).catch((err) => {
-      let error = { ...this.state.error, [err]: err}
-      this.setState({error});
-    });
+    // ADD POST REQUEST
+    const targetNode = document.querySelector('#targetScreenshot');
+    const modalNode = document.querySelector('#newScreenshot');
+
+    html2canvas(targetNode, { useCORS:true }).then((canvas) => {
+      canvas = canvas.toDataURL("image/png");
+      modalNode.src = canvas;
+      return canvas;
+    }).then((dataURL) => {
+      console.log('POST REQUEST TO API SERVER');
+    }).catch(error => this.setState({error}));
   }
 
   handleFormInput = (e) => {
@@ -82,12 +85,13 @@ export default class App extends Component {
   }
 
   saveScreenshot = (e) => {
+
     e.preventDefault();
 
     const wp = new WPAPI({
       endpoint: DEVELOPMENTURL,
-      username: 'evan@roidna.com',
-      password: 'Gvpix5597!Gvpix5597!',
+      username: USER,
+      password: PASSWORD,
       auth: true
     });
     wp.finishedPage = wp.registerRoute('wp/v2', '/finished_page');
@@ -97,7 +101,6 @@ export default class App extends Component {
       project_title: this.state.projectTitle,
     }
 
-    //REFACTOR
     const generateImage = () => {
       return this.state.initialModules.map(item => {
         let jsonifyLastItem = JSON.parse(item[item.length-1]);
