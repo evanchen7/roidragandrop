@@ -13,7 +13,10 @@ const HEADER = `${apiUrl}/wp-json/wp/v2/header`;
 const MODULE = `${apiUrl}/wp-json/wp/v2/module`;
 const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
 const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+const USER = process.env.REACT_APP_USERNAME;
+const PASSWORD = process.env.REACT_APP_PASSWORD;
 
+console.log('USER', USER, PASSWORD)
 
 export default class App extends Component {
   constructor() {
@@ -42,27 +45,17 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-
+    // ADD POST REQUEST
     const targetNode = document.querySelector('#targetScreenshot');
     const modalNode = document.querySelector('#newScreenshot');
 
     html2canvas(targetNode, { useCORS:true }).then((canvas) => {
       canvas = canvas.toDataURL("image/png");
-      modalNode.src = canvas
-      // document.body.appendChild(canvas);
-    })
-
-    // domtoimage.toPng(targetNode, {
-    //   bgcolor: 'white'
-    // }).then((dataUrl) => {
-
-    //   modalNode.crossOrigin = "Anonymous";
-    //   modalNode.src = dataUrl;
-
-    // }).catch((err) => {
-    //     let error = { ...this.state.error, [err]: err}
-    //     this.setState({error});
-    // });
+      modalNode.src = canvas;
+      return canvas;
+    }).then((dataURL) => {
+      console.log('POST REQUEST TO API SERVER');
+    }).catch(error => this.setState({error}));
   }
 
   handleFormInput = (e) => {
@@ -92,12 +85,13 @@ export default class App extends Component {
   }
 
   saveScreenshot = (e) => {
+
     e.preventDefault();
 
     const wp = new WPAPI({
       endpoint: DEVELOPMENTURL,
-      username: 'evan@roidna.com',
-      password: 'Gvpix5597!Gvpix5597!',
+      username: USER,
+      password: PASSWORD,
       auth: true
     });
     wp.finishedPage = wp.registerRoute('wp/v2', '/finished_page');
