@@ -14,18 +14,63 @@ Check the package.json files for start scripts and dependencies. For this projec
 
 ```
 npm install
-
 ```
 
-### Installing
-
-In the same directory as the package.json file, run the following commands below. Currently the development build is running, production version has not been built yet.
+If NPM does not work, you can try using [YARN](https://yarnpkg.com) and running:
 
 ```
-npm start
+yarn install
 ```
 
-Webpack should display a development server running which will actively listen for any file changes. If you save a file for example, Webpack will reload and any content you have on the browser will be refreshed.
+This will install all the dependencies defined in the package.json file
+
+
+
+### Serving the front end and local development
+In the same directory as the package.json file, run the following commands below. Currently the development build is running, production version is detailed elsewhere.
+
+```
+npm run dev
+```
+```
+yarn run dev
+```
+
+Once the command fires off, the server information will be broadcasted in your terminal. Webpack should display a development server running which will serve the React app. Hotloading is enabled, if you save a file for example, Webpack will reload and any content you have on the browser will refresh.
+
+<p align="center"><img src="https://i.imgur.com/nAWr2MY.png"/></p>
+
+Major errors such as server crashing will display. Linting errors will occasionaly show up, but that can be ignored.
+
+Environment variables can be injected, use the .env.bak file and add whatever you need. After rename the file to ".bak"
+
+## Development/Production
+
+### Access
+In order to access the Dev/Prod environment, login into the ROI-DNA AWS account and ssh into the **DAM-Module-PROD** instance. The instance is a t2.micro running Ubuntu 16.04.
+
+### Docker
+
+The production environment contains four docker containers:
+
+* evanchen7/react-docker - React Frontend App
+* evanchen7/roidnadammodule:latest - Wordpress
+* mysql:latest - MySQL
+* phpmyadmin/phpmyadmin - PHPMyAdmin
+
+<p align="center"><img src="https://i.imgur.com/AlzCzEv.png"/></p>
+
+### Environment
+
+process.env.USERNAME
+process.env.PASSWORD
+
+.env file needs to be changed with admin credentials, for ease of usage, I enabled [Basic Authentication Plugin](https://github.com/WP-API/Basic-Auth)  for authentication.
+
+yarn build
+Move build folder to server/
+
+
 
 ## Running the tests
 
@@ -40,7 +85,7 @@ Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
 Pull from evanchen7/react-docker:latest. A docker-compose file is included in the DAMModule repo
 
 ```
-docker run -d -it --rm -p 80:5000 --name draganddrop evanchen7/react-docker
+docker run -d -it --rm -p 80:3000 --name draganddrop evanchen7/react-docker
 ```
 
 ## Built With
