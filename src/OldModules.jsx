@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Dropdown, Input, Loader } from 'semantic-ui-react';
 import Background from './img/add-button.svg';
 import './css/main.css';
 
@@ -12,7 +12,6 @@ export default class OldModules extends Component {
     showClass: "open"
   }
 
-  handleDropDownState = () => this.setState({ dropDownStatus: !this.state.dropDownStatus });
   handleClass = () => this.setState({ classStatus: !this.state.classStatus });
   removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
   forceLeave = () => this.setState({ dropDownStatus: false});
@@ -91,26 +90,26 @@ export default class OldModules extends Component {
       "padding": "0px 10px"
     }
     return (
+      !moduleName ? <div style={{"float":""}}><Loader active size='massive' inline='true'>Loading</Loader></div> :
         <li>
-          <div style={style1}>
+          <div style={style1} >
             <i style={style2} onClick={this.checkIfModule} />
           </div>
-          <div  onMouseLeave={() =>this.setState({dropDownStatus: false})} className='menu-content'>
-            <a className='menu-open-link'>
-
+          <div className='menu-content'>
+            <a className='menu-open-link' >
                 <Dropdown
                 loading={!options ? true : false}
-                open={dropDownStatus}
                 text={moduleName}
-                onMouseEnter={() => this.setState({dropDownStatus: true})}
+                open={dropDownStatus}
+                onClick={() => this.setState({dropDownStatus: true})}
                 fluid
                 floating
                 labeled
                 direction='right'
+                onBlur={() => this.setState({dropDownStatus: false})}
                 >
                 <Dropdown.Menu>
-                {
-                  !options ?
+                { !options ?
                   <Dropdown.Header icon='sidebar' content='Search is loading...' /> :
                   <Dropdown.Header icon='sidebar' content='Search...' /> }
                 <Input icon='search' iconPosition='left' name='search ' onChange={this.handleInput} />
@@ -123,7 +122,7 @@ export default class OldModules extends Component {
                         <Dropdown.Item
                           key={option.value}
                           {...option}
-                          onClick={(e, data)=>{this.changeField(e, data); this.forceLeave()}}
+                          onClick={(e, data)=>{this.changeField(e, data);}}
                           something={[moduleName]}
                           /> ) :
                         <Dropdown.Item value='Loading..'/>

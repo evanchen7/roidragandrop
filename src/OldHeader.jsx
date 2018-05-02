@@ -15,6 +15,47 @@ export default class OldHeader extends Component {
   handleOpenScreenshot = () => this.setState({ modalOpenScreenShot: true });
   handleCloseScreenshot = () => this.setState({ modalOpenScreenShot: false });
 
+  handleDropDown = () => {
+//     <Dropdown
+//     icon={false}
+//     text='Tools'
+//     as='a'
+//     className="button pill small"
+
+//     >
+//     <Dropdown.Menu>
+//     <Dropdown.Item >
+//         <Dropdown text='Headers' direction='right' fluid >
+//         <Dropdown.Menu >
+//             <Dropdown.Item icon='arrow down' text="Add to Bottom" onClick={() => this.props.handleAddModules("unshift Header")}/>
+//             <Dropdown.Item icon='arrow up' text="Add to Top"  onClick={() => this.props.handleAddModules("Header")}/>
+//         </Dropdown.Menu>
+//         </Dropdown>
+//     </Dropdown.Item>
+//     <Dropdown.Item >
+//         <Dropdown text='Modules' direction='right' fluid >
+//         <Dropdown.Menu >
+//             <Dropdown.Item icon='arrow down' text="Add to Bottom" onClick={() => this.props.handleAddModules("unshift Module")}/>
+//             <Dropdown.Item icon='arrow up' text="Add to Top" onClick={() => this.props.handleAddModules("Module")}/>
+//         </Dropdown.Menu>
+//         </Dropdown>
+//     </Dropdown.Item>
+//     <Dropdown.Item >
+//         <Dropdown text='Footer' direction='right' fluid >
+//         <Dropdown.Menu >
+//             <Dropdown.Item icon='arrow down' text="Add to Bottom" onClick={() => this.props.handleAddModules("unshift Footer")}/>
+//             <Dropdown.Item icon='arrow up' text="Add to Top" onClick={() => this.props.handleAddModules("Footer")}/>
+//         </Dropdown.Menu>
+//         </Dropdown>
+//     </Dropdown.Item>
+
+//     <Dropdown.Divider />
+//     <Dropdown.Item text='Reset' icon='refresh' onClick={this.show}/>
+//     <Dropdown.Item text='Save' icon='save' onClick={this.handleOpenScreenshot}/>
+//     </Dropdown.Menu>
+//   </Dropdown>
+  }
+
   render() {
     return (
         <header>
@@ -69,42 +110,3 @@ export default class OldHeader extends Component {
     );
   }
 }
-
-{/* <Dropdown
-                    icon={false}
-                    text='Tools'
-                    as='a'
-                    className="button pill small"
-
-                    >
-                    <Dropdown.Menu>
-                    <Dropdown.Item >
-                        <Dropdown text='Headers' direction='right' fluid >
-                        <Dropdown.Menu >
-                            <Dropdown.Item icon='arrow down' text="Add to Bottom" onClick={() => this.props.handleAddModules("unshift Header")}/>
-                            <Dropdown.Item icon='arrow up' text="Add to Top"  onClick={() => this.props.handleAddModules("Header")}/>
-                        </Dropdown.Menu>
-                        </Dropdown>
-                    </Dropdown.Item>
-                    <Dropdown.Item >
-                        <Dropdown text='Modules' direction='right' fluid >
-                        <Dropdown.Menu >
-                            <Dropdown.Item icon='arrow down' text="Add to Bottom" onClick={() => this.props.handleAddModules("unshift Module")}/>
-                            <Dropdown.Item icon='arrow up' text="Add to Top" onClick={() => this.props.handleAddModules("Module")}/>
-                        </Dropdown.Menu>
-                        </Dropdown>
-                    </Dropdown.Item>
-                    <Dropdown.Item >
-                        <Dropdown text='Footer' direction='right' fluid >
-                        <Dropdown.Menu >
-                            <Dropdown.Item icon='arrow down' text="Add to Bottom" onClick={() => this.props.handleAddModules("unshift Footer")}/>
-                            <Dropdown.Item icon='arrow up' text="Add to Top" onClick={() => this.props.handleAddModules("Footer")}/>
-                        </Dropdown.Menu>
-                        </Dropdown>
-                    </Dropdown.Item>
-
-                    <Dropdown.Divider />
-                    <Dropdown.Item text='Reset' icon='refresh' onClick={this.show}/>
-                    <Dropdown.Item text='Save' icon='save' onClick={this.handleOpenScreenshot}/>
-                    </Dropdown.Menu>
-                  </Dropdown> */}

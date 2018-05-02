@@ -16,8 +16,6 @@ const DEVELOPMENTURL =`${apiUrl}/wp-json`;
 const USER = process.env.REACT_APP_USERNAME;
 const PASSWORD = process.env.REACT_APP_PASSWORD;
 
-console.log('USER', USER, PASSWORD)
-
 export default class App extends Component {
   constructor() {
     super();

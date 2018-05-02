@@ -225,10 +225,6 @@ There is some caching weirdness that Wordpress utlizies that messes with CORS, s
     <em>Chrome</em>
 </p>
 
-## Bugs
-* Clicking on Toolbar and then clicking on the search input will close the dropdown
-* After search input is complete, the results will remain the same. User will have to create a new Toolbar
-
 ## To Do
 * Complete Pages link
 * Save stitched picture to Express backend and then save to Wordpress CMS

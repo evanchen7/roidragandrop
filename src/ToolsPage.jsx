@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Loader } from 'semantic-ui-react';
 import OldModules from './OldModules';
 import './css/main.css';
 
@@ -121,8 +121,8 @@ export default class ToolsPage extends Component {
                                 {
                                     this.props.initialModules.length === 0 ?
                                     <div className = "destination small-12">
-                                    <div className="module-added">
-                                        <h2>Press Tools to Begin</h2>
+                                        <div className="module-added">
+                                        <Loader inline='centered' size='massive' active> <h2>Loading...</h2></Loader>
                                         </div>
                                     </div> : this.generateModuleFields()
                                 }
