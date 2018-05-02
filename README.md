@@ -198,6 +198,12 @@ Watchtower will be implemented in the future for continuous deployment: https://
 
 ## Running the tests
 Tests are written for JEST and Enzyme
+```
+yarn test
+```
+```
+npm run test
+```
 
 ## Styling Guide
 Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
@@ -209,6 +215,15 @@ Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
 * [PM2](http://pm2.keymetrics.io/) - A Complete feature set for production environment, built with a worldwide community of developers and enterprises
 * [Semantic UI](https://react.semantic-ui.com) - UI Framework built with React components
 * [WP-API](https://github.com/WP-API/node-wpapi) - A NodeJS library used to interact with Wordpress REST API
+
+## Troubleshooting
+There is some caching weirdness that Wordpress utlizies that messes with CORS, simply perform a hard reload and clear cache.
+<p align='center'>
+    <img src='https://i.imgur.com/IiRI6In.png'>
+</p>
+<p align='center'>
+    <em>Chrome</em>
+</p>
 
 ## Bugs
 * Clicking on Toolbar and then clicking on the search input will close the dropdown
