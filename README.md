@@ -5,7 +5,6 @@ This project is a reimplementation of the Drag and Drop website. Refer to the or
 I utilized Facebook's React boilerplate starter application: Create-React-App (https://github.com/facebook/create-react-app)
 
 ## Getting Started
-***
 Within your local development environment, you run you will have to have Node installed and a package management tool. I use NPM or Yarn. If this is your first time installing either NodeJS or Yarn, I recommend using [Node Version Manager](https://github.com/creationix/nvm)
 
 ### Prerequisites
@@ -47,7 +46,6 @@ Environment variables can be injected, use the .env.bak file and add whatever yo
 I added the production and development URL, as well as the required PORT number. USERNAME and PASSWORD needs to have basic credentials to access the Wordpress backend (same one used to login)
 
 ### Basic Usage
-***
 <p align="center">
     <img src="https://i.imgur.com/8k4KEVX.png" width="300" height="400"/></p>
 <p align="center">
@@ -116,7 +114,6 @@ I added the production and development URL, as well as the required PORT number.
 * Post ID represents the Finished Page id found in the Wordpress backend
 
 ## Development/Production
-***
 
 ### Access
 In order to access the Dev/Prod environment, login into the ROI-DNA AWS account and ssh into the **DAM-Module-PROD** instance. The instance is a t2.micro running Ubuntu 16.04.
@@ -156,7 +153,6 @@ usermod -u 1000 www-data #Give RW access to user 1000
 ```
 
 ## Deployment
-***
 In the project root, there is an **.env.bak** file that needs to be changed to **.env** and the credentials must come from damcms.roidna.com user database.
 ```
 REACT_APP_USERNAME=FILLMEIN
@@ -193,7 +189,6 @@ docker run -d -it --rm -p 80:3000 --name draganddrop evanchen7/react-docker
 The last command runs the image and a container called **draganddrop** will be created. The container will have port 3000 exposed and the command binds it to 80. Assuming there is no errors, we can access the application through the assigned ip.
 
 ## Continuous Integration/Continuous Deployment
-***
 
 https://cloud.docker.com/swarm/evanchen7/repository/docker/evanchen7/react-docker/general
 
@@ -202,15 +197,12 @@ Docker is listening for a change in MASTER branch of roidragandrop. When there's
 Watchtower will be implemented in the future for continuous deployment: https://github.com/v2tec/watchtower
 
 ## Running the tests
-***
 Tests are written for JEST and Enzyme
 
 ## Styling Guide
-***
 Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
 
 ## Built With
-***
 * [React](https://reactjs.org/) - A JavaScript library for building user interfaces
 * [NodeJS](https://nodejs.org/en/) - JavaScript networking and package management
 * [Docker](https://www.docker.com/) - Cloud container technology used for building and shipping applications
@@ -219,25 +211,20 @@ Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
 * [WP-API](https://github.com/WP-API/node-wpapi) - A NodeJS library used to interact with Wordpress REST API
 
 ## Bugs
-***
 * Clicking on Toolbar and then clicking on the search input will close the dropdown
 * After search input is complete, the results will remain the same. User will have to create a new Toolbar
 
 ## To Do
-***
 * Complete Pages link
 * Save stitched picture to Express backend and then save to Wordpress CMS
 * Enable Watchtower to listen for any new docker images
 * Unit testing for Wordpress instance
 
 ## Authors
-***
 * **Evan Chen** - *Initial work* - [evanchen7](https://github.com/evanchen7)
 
 ## License
-***
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
-***
 * Original SASS/SCSS by ROI-DNA [ROI-DNA](https://www.roidna.com/)
