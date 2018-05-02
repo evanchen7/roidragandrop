@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Dropdown, Input, Loader } from 'semantic-ui-react';
 import Background from './img/add-button.svg';
 import './css/main.css';
 
 export default class OldModules extends Component {
 
   state = {
-    value: this.props.moduleName,
     dropDownStatus: false,
     options: null,
     classStatus: false,
     showClass: "open"
   }
 
-  handleDropDownState = () => this.setState({ dropDownStatus: !this.state.dropDownStatus });
   handleClass = () => this.setState({ classStatus: !this.state.classStatus });
   removeNumbers = (item) =>  item.replace(/[0-9]/g, '');
   forceLeave = () => this.setState({ dropDownStatus: false});
@@ -23,30 +21,30 @@ export default class OldModules extends Component {
     this.props.dropDown(e, data);
   }
 
+  transformData = () => this.props.data.map((item) => {
+    return {
+      "text": item.title.rendered,
+      "key": item.id,
+      "url": item.acf.image_upload.url,
+      "id": item.id,
+      "image": {
+        "src": item.acf.image_upload.sizes.thumbnail
+      },
+      "tags": item.acf.tags.map((tag) => tag.name)
+    };
+  });
 
   handleInput = (event, data) => {
-    let options = this.state.options.filter((item) => {
-      return item.text.toLowerCase().indexOf(data.value.toLowerCase()) > -1;
-    })
+    let target = data.value;
+    let options = this.transformData().filter((item) => {
+      return item.text.toLowerCase().indexOf(target.toLowerCase()) > -1;
+    });
     this.setState({options});
   }
 
   loadTransformProps = () => {
-    const transformData = () => this.props.data.map((item) => {
-      return {
-        "text": item.title.rendered,
-        "key": item.id,
-        "url": item.acf.image_upload.url,
-        "id": item.id,
-        "image": {
-          "src": item.acf.image_upload.sizes.thumbnail
-        },
-        "tags": item.acf.tags.map((tag) => tag.name)
-      };
-    });
-    const options = transformData();
     this.setState((prevState, props) => ({
-      options: options
+      options: this.transformData()
     }));
   }
 
@@ -70,8 +68,8 @@ export default class OldModules extends Component {
   }
 
   checkIfModule = () => {
-    if (this.removeNumbers(this.state.value) === "Module") {
-      this.props.handleAddModuleOnly("Module")
+    if (this.removeNumbers(this.props.moduleName) === "Module") {
+        this.props.handleAddModuleOnly("Module");
     }
   }
 
@@ -80,7 +78,8 @@ export default class OldModules extends Component {
   }
 
   render() {
-    const { value } = this.state;
+    const { dropDownStatus, options } = this.state;
+    const { moduleName } = this.props;
     const style1 = {
       "padding": "7px 15px 6px",
       "marginRight": "2px",
@@ -91,25 +90,26 @@ export default class OldModules extends Component {
       "padding": "0px 10px"
     }
     return (
+      !moduleName ? <div style={{"float":""}}><Loader active size='massive' inline='true'>Loading</Loader></div> :
         <li>
-          <div onClick={this.handleDropDownState} style={style1}>
+          <div style={style1} >
             <i style={style2} onClick={this.checkIfModule} />
           </div>
-          <div onClick={this.handleDropDownState} className='menu-content'>
-            <a  className='menu-open-link' >
-
+          <div className='menu-content'>
+            <a className='menu-open-link' >
                 <Dropdown
-                text={`${value}`}
-                onClick={() => {this.handleDropDownState()}}
+                loading={!options ? true : false}
+                text={moduleName}
+                open={dropDownStatus}
+                onClick={() => this.setState({dropDownStatus: true})}
                 fluid
                 floating
                 labeled
-                as='div'
                 direction='right'
+                onBlur={() => this.setState({dropDownStatus: false})}
                 >
                 <Dropdown.Menu>
-                {
-                  !this.state.options ?
+                { !options ?
                   <Dropdown.Header icon='sidebar' content='Search is loading...' /> :
                   <Dropdown.Header icon='sidebar' content='Search...' /> }
                 <Input icon='search' iconPosition='left' name='search ' onChange={this.handleInput} />
@@ -117,13 +117,13 @@ export default class OldModules extends Component {
                 <Dropdown.Header icon='sidebar' content='Select a Module' />
                   <Dropdown.Menu scrolling>
                       {
-                        this.state.options ?
-                        this.state.options.map(option =>
+                        options ?
+                        options.map(option =>
                         <Dropdown.Item
                           key={option.value}
                           {...option}
-                          onClick={(e, data)=>{this.changeField(e, data); this.forceLeave()}}
-                          something={[this.props.moduleName]}
+                          onClick={(e, data)=>{this.changeField(e, data);}}
+                          something={[moduleName]}
                           /> ) :
                         <Dropdown.Item value='Loading..'/>
                       }

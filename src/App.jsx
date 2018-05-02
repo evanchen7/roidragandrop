@@ -16,8 +16,6 @@ const DEVELOPMENTURL =`${apiUrl}/wp-json`;
 const USER = process.env.REACT_APP_USERNAME;
 const PASSWORD = process.env.REACT_APP_PASSWORD;
 
-console.log('USER', USER, PASSWORD)
-
 export default class App extends Component {
   constructor() {
     super();
@@ -196,10 +194,10 @@ export default class App extends Component {
 
   resetModules = () => {
     this.setState({
-      initialModules: [],
-      headerCount: 0,
-      moduleCount: 0,
-      footerCount: 0
+      initialModules: [["Header1"], ["Module1"], ["Footer1"]],
+      headerCount: 1,
+      moduleCount: 1,
+      footerCount: 1
     });
   }
 
