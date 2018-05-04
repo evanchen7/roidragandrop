@@ -1,56 +1,52 @@
 import React, { Component } from 'react';
-// import _ from 'lodash';
+import { Card, Image } from 'semantic-ui-react';
 import './css/finishedpage.css';
 import WPAPI from 'wpapi';
 
-// const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
-// const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
+const DEVELOPMENTURL =`${apiUrl}/wp-json`;
+const USER = process.env.REACT_APP_USERNAME;
+const PASSWORD = process.env.REACT_APP_PASSWORD;
 
 const wp = new WPAPI({
-  endpoint: 'http://54.183.106.255:8000/wp-json',
-  username: 'evan@roidna.com',
-  password: 'Gvpix5597!Gvpix5597!',
+  endpoint: DEVELOPMENTURL,
+  username: USER,
+  password: PASSWORD,
   auth: true
 });
 
-wp.finishedPage = wp.registerRoute('wp/v2', '/finished_page',
+wp.stitchedPhotos = wp.registerRoute('wp/v2', '/stitched_photo',
 { params: [ 'before', 'after', 'author', 'parent', 'post', 'posts' ] });
 
 
 export default class StitchedPhotos extends Component {
     state = {
       pages: null,
-      perPage: 5,
+      perPage: 100,
       pageNumber: 1
     }
 
-  // link pageNumber to state
-  // link perPage to state
   grabFinishedPages = () => {
     const { perPage, pageNumber } = this.state;
-    wp.finishedPage().posts().perPage(perPage).page(pageNumber)
+    wp.stitchedPhotos().posts().perPage(perPage).page(pageNumber)
       .then(res => this.setState({ pages: res}))
   }
 
-  removePTags = (content) => {
-    return content.replace(/<\/?p[^>]*>/g, "");
-  }
-
-  formatPages = () => {
+  formatCards = () => {
     const pages = this.state.pages;
     if (!pages) return <h1>Use Semantic Loading...</h1>
 
+    console.log(pages)
+
     return pages.map((page, index) => {
-        const pageContent = this.removePTags(page.content.rendered);
+      const { stitched_photo, author_name, project_title } = page.acf
       return (
-              <div key={page.id}>
-                <br/>
-                <div >
-                  {
-                    pageContent
-                  }
-                </div>
-              </div>
+        <Card raised key={index}>
+          <Image src={stitched_photo.url}/>
+          <Card.Header>{project_title}</Card.Header>
+          <Card.Meta>{`Created on ${stitched_photo.date}`}</Card.Meta>
+          <Card.Description>{author_name}</Card.Description>
+        </Card>
       );
     });
   }
@@ -62,8 +58,13 @@ export default class StitchedPhotos extends Component {
   render () {
     return (
         <div>
-          <h1>Page is under development</h1>
-          {this.formatPages()}
+          {
+            !this.state.pages ? <h1>No Pages Saved</h1> :
+          <Card.Group itemsPerRow={4}>
+            {this.formatCards()}
+          </Card.Group>
+
+          }
         </div>
     );
   }

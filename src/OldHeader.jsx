@@ -66,11 +66,14 @@ export default class OldHeader extends Component {
                     </Link>
                 </div>
 
+
                 <div className="columns right">
-                  <Link to="/stitchedphotos" className="button pill small">Pages</Link>
+                  {/* <Link to="/stitchedphotos" className="button pill small">Pages</Link> */}
                   <a className="button pill small refresh" onClick={this.show}><i className="fa fa-repeat" /> Refresh</a>
-                  <a className="button pill small" onClick={this.handleOpenScreenshot}><i className="fa fa-download" />  Save</a>
-                  <a className="sign-out"><i className="fa fa-user-o"></i> Sign Out</a>
+                  <a className="button pill small save" onClick={this.handleOpenScreenshot}><i className="fa fa-download" />  Save</a>
+                  <Link className="sign-out" as='a' to="/stitchedphotos">
+                  <i className="fa fa-user-o"></i>Sign Out
+                  </Link>
                 </div>
                 <Confirm
                 open={this.state.open}
