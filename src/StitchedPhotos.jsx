@@ -17,7 +17,7 @@ wp.finishedPage = wp.registerRoute('wp/v2', '/finished_page',
 { params: [ 'before', 'after', 'author', 'parent', 'post', 'posts' ] });
 
 
-export default class FinishedPage extends Component {
+export default class StitchedPhotos extends Component {
     state = {
       pages: null,
       perPage: 5,
