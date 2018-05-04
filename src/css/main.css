@@ -5759,9 +5759,12 @@ body {
     color: #333;
     margin-right: 15px;
 }
-
 .wrapper header .columns.right a.button:hover {
-    background: grey;
+    background: #85be03;
+}
+
+.wrapper header .columns.right a.refresh:hover {
+    background: #8cc800;
 }
 .wrapper header .columns.right a.refresh {
     font-size: 14px;
@@ -5770,7 +5773,7 @@ body {
     background: black;
     color: white;
     margin-right: 15px;
-    border: 0.5px solid white;
+    border: 2px solid #8cc800;
 }
 
 .wrapper header .columns.right a.sign-out {

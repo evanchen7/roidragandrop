@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Form, Label, Icon, Modal, Loader, Dimmer, Message } from 'semantic-ui-react';
+import { Button, Form, Label, Modal, Loader, Dimmer, Message } from 'semantic-ui-react';
 
 export default class ModalForm extends Component {
+  state = { saveDisable: false }
   render() {
     let buttonDisable =
       this.props.updatedFormValues.authorName &&
       this.props.updatedFormValues.authorEmail &&
       this.props.updatedFormValues.projectTitle &&
       this.props.updatedFormValues.previewScreenshot !== null;
-    let { dataSaveStatus } = this.props;
+    let { dataSaveStatus, previewScreenshot, handleName, updatedFormValues, handleEmail, handleProjectTitle, wordpressData, wordpressSave } = this.props;
     dataSaveStatus = JSON.parse(dataSaveStatus);
 
     return (
@@ -17,44 +18,62 @@ export default class ModalForm extends Component {
           <Label color="grey" >Author Name</Label>
           <input
             placeholder='Author Name'
-            value={this.props.updatedFormValues.authorName}
-            onChange={this.props.handleName}/>
+            value={updatedFormValues.authorName}
+            onChange={handleName}/>
         </Form.Field>
         <Form.Field>
           <Label color="grey" >Author Email</Label>
           <input
             placeholder='Author Email'
-            value={this.props.updatedFormValues.authorEmail}
-            onChange={this.props.handleEmail}/>
+            value={updatedFormValues.authorEmail}
+            onChange={handleEmail}/>
         </Form.Field>
         <Form.Field>
           <Label color="grey" >Project Title</Label>
           <input
             placeholder='Project Title'
-            value={this.props.updatedFormValues.projectTitle}
-            onChange={this.props.handleProjectTitle}/>
+            value={updatedFormValues.projectTitle}
+            onChange={handleProjectTitle}/>
         </Form.Field>
-        <Button size='large' color='grey' onClick={this.props.previewScreenshot} inverted animated>
-          <Button.Content visible>Preview</Button.Content>
-          <Button.Content hidden>
-            <Icon fitted name='photo'/>
-          </Button.Content>
-        </Button>
+
+ <Modal
+            trigger = { <Button
+              content='Save WP'
+              size='medium'
+              disabled={this.state.saveDisable ? false :true}
+              onClick={this.props.savePNGToAPI}
+              inverted  />
+            }>
+          <Modal.Content>
+            { wordpressSave ?
+              <Message>
+                <Message.Header>
+                  Your stiched photo can now be view under the pages tab
+                </Message.Header>
+                <Message.Item>Link: {wordpressData}</Message.Item>
+              </Message>
+              :
+              <Dimmer active>
+                <Loader inverted content='Saving to wordpress, please wait...' />
+              </Dimmer>
+            }
+          </Modal.Content>
+        </Modal>
+        <Button
+          content='Preview'
+          size='medium'
+          onClick={() => { previewScreenshot(); this.setState({ saveDisable: true })}}
+          inverted  />
         <Modal
             trigger = {<Button
-            size='large'
-            color='blue'
+            content='Submit'
+            size='medium'
             onClick={this.props.saveScreenshot}
+            inverted
             disabled={buttonDisable ? false :true}
-            inverted animated>
-            <Button.Content visible>Submit</Button.Content>
-            <Button.Content hidden>
-              <Icon fitted name='save'/>
-            </Button.Content>
-          </Button>}>
+            />
+            }>
           <Modal.Content>
-
-            { console.log(this.props.dataSaveStatus)}
             { dataSaveStatus ?
               <Message>
                 <Message.Header>

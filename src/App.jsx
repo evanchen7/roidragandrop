@@ -4,7 +4,7 @@ import WPAPI from 'wpapi';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import OldHeader from './OldHeader';
-import FinishedPage from './FinishedPage';
+import StitchedPhotos from './StitchedPhotos';
 import ToolsPage from './ToolsPage';
 import './css/main.css';
 
@@ -15,6 +15,8 @@ const FOOTER = `${apiUrl}/wp-json/wp/v2/footer`;
 const DEVELOPMENTURL =`${apiUrl}/wp-json`;
 const USER = process.env.REACT_APP_USERNAME;
 const PASSWORD = process.env.REACT_APP_PASSWORD;
+const DEVPORT = process.env.REACT_APP_DEVPORT;
+const wp = new WPAPI({ endpoint: DEVELOPMENTURL, username: USER, password: PASSWORD, auth: true });
 
 export default class App extends Component {
   constructor() {
@@ -34,7 +36,9 @@ export default class App extends Component {
       moduleCount: 1,
       footerCount: 1,
       error: null,
-      test: false
+      pngData: null,
+      wordpressSave: false,
+      wordpressData: null
     };
   }
 
@@ -43,14 +47,15 @@ export default class App extends Component {
   }
 
   previewScreenshot = () => {
-    // ADD POST REQUEST
+
     const targetNode = document.querySelector('#targetScreenshot');
     const modalNode = document.querySelector('#newScreenshot');
 
     html2canvas(targetNode, { useCORS:true }).then((canvas) => {
       canvas = canvas.toDataURL("image/png");
       modalNode.src = canvas;
-      return canvas;
+      this.setState({ pngData: canvas });
+
     }).then((dataURL) => {
       console.log('POST REQUEST TO API SERVER');
     }).catch(error => this.setState({error}));
@@ -81,17 +86,18 @@ export default class App extends Component {
         return null;
     }
   }
+  generateImage = () => {
+    return this.state.initialModules.map(item => {
+      let jsonifyLastItem = JSON.parse(item[item.length-1]);
+      if (item.length <= 0) return <div/>
+      console.log(item);
+      return `<img src="${jsonifyLastItem.url}" alt=""/>`
+    }).join("");
+  }
 
   saveScreenshot = (e) => {
-
     e.preventDefault();
 
-    const wp = new WPAPI({
-      endpoint: DEVELOPMENTURL,
-      username: USER,
-      password: PASSWORD,
-      auth: true
-    });
     wp.finishedPage = wp.registerRoute('wp/v2', '/finished_page');
     const postData = {
       author_name: this.state.authorName,
@@ -99,16 +105,8 @@ export default class App extends Component {
       project_title: this.state.projectTitle,
     }
 
-    const generateImage = () => {
-      return this.state.initialModules.map(item => {
-        let jsonifyLastItem = JSON.parse(item[item.length-1]);
-        if (item.length <= 0) return <div/>
-        console.log(item);
-        return `<img src="${jsonifyLastItem.url}" alt=""/>`
-      }).join("");
-    }
 
-    console.log(generateImage())
+    console.log(this.generateImage())
 
     if (!postData) {
       const error = "No Post Data!"
@@ -118,7 +116,7 @@ export default class App extends Component {
     wp.finishedPage()
       .create({
         title: postData.project_title,
-        content: generateImage(),
+        content: this.generateImage(),
         status: 'publish',
         tags: ['Finished Page'],
         fields: postData
@@ -138,6 +136,23 @@ export default class App extends Component {
         let error = { ...this.state.error, [err]: err}
         this.setState({error});
       });
+  }
+
+  savePNGToAPI = () => {
+    let options = {
+      pngData: this.state.pngData,
+      projectTitle: this.state.projectTitle || Date.now().toString(),
+      authorName: this.state.authorName,
+      authorEmail: this.state.authorEmail
+    }
+    axios.post(`http://localhost:${DEVPORT}/upload`, options)
+         .then((response) => {
+          const { link, type } = response.data;
+          console.log(response);
+          if (type === 'stitched_photo') {
+            this.setState({ wordpressSave: true, wordpressData: link })
+          }
+    })
   }
 
   grabDataFromWordPress = () => {
@@ -324,7 +339,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { authorName, authorEmail, projectTitle, previewScreenshot } = this.state;
+    const { authorName, authorEmail, projectTitle, previewScreenshot, wordpressSave, wordpressData, dataSaveStatus } = this.state;
     const updatedFormValues = {
       authorName, authorEmail, projectTitle, previewScreenshot
     };
@@ -332,9 +347,12 @@ export default class App extends Component {
       <Router>
         <div className='wrapper'>
           <OldHeader
+            wordpressData={wordpressData}
+            wordpressSave={wordpressSave}
+            savePNGToAPI={this.savePNGToAPI}
             resetModules={this.resetModules}
             handleAddModules={this.handleAddModules}
-            dataSaveStatus={this.state.dataSaveStatus}
+            dataSaveStatus={dataSaveStatus}
             updatedFormValues={updatedFormValues}
             handleName={this.handleFormInput}
             handleEmail={this.handleFormInput}
@@ -358,7 +376,7 @@ export default class App extends Component {
                           resetModules={this.resetModules}
                           sidebarVisibility={this.state.sidebarVisibility} />
                          }/>
-                     <Route path="/finishedpages" component={FinishedPage} />
+                     <Route path="/stitchedphotos" component={StitchedPhotos} />
                       <Route path="*" render={() => <Redirect to="/" />} />
                     </Switch>
                 </div>

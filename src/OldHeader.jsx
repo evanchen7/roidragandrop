@@ -66,11 +66,14 @@ export default class OldHeader extends Component {
                     </Link>
                 </div>
 
+
                 <div className="columns right">
-                  {/* <Link to="/finishedpages" className="button pill small">Pages</Link> */}
+                  {/* <Link to="/stitchedphotos" className="button pill small">Pages</Link> */}
                   <a className="button pill small refresh" onClick={this.show}><i className="fa fa-repeat" /> Refresh</a>
-                  <a className="button pill small" onClick={this.handleOpenScreenshot}><i className="fa fa-download" />  Save</a>
-                  <a className="sign-out"><i className="fa fa-user-o"></i> Sign Out</a>
+                  <a className="button pill small save" onClick={this.handleOpenScreenshot}><i className="fa fa-download" />  Save</a>
+                  <Link className="sign-out" as='a' to="/stitchedphotos">
+                  <i className="fa fa-user-o"></i>Sign Out
+                  </Link>
                 </div>
                 <Confirm
                 open={this.state.open}
@@ -89,12 +92,15 @@ export default class OldHeader extends Component {
                     </Header.Content>
                     </Header>
                     <br />
-                    <Grid centered columns={2}>
+                    <Grid centered>
                         <Modal.Content image scrolling>
                             <Image size="large" id="newScreenshot" src="https://cloud.netlifyusercontent.com/assets/344dbf88-fdf9-42bb-adb4-46f01eedd629/160ae39d-b5b0-4d9f-a8e1-76102113e2f8/placeholder-picture-large-opt.png"/>
                         </Modal.Content>
                     <Modal.Actions>
                         <ModalForm
+                            wordpressData={this.props.wordpressData}
+                            wordpressSave={this.props.wordpressSave}
+                            savePNGToAPI={this.props.savePNGToAPI}
                             dataSaveStatus={this.props.dataSaveStatus}
                             updatedFormValues={this.props.updatedFormValues}
                             handleName={this.props.handleName}
