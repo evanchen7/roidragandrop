@@ -6,6 +6,7 @@ import html2canvas from 'html2canvas';
 import OldHeader from './OldHeader';
 import StitchedPhotos from './StitchedPhotos';
 import ToolsPage from './ToolsPage';
+import ErrorBoundary from './ErrorBoundary';
 import './css/main.css';
 
 const apiUrl = process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PROD_API_URL : process.env.REACT_APP_DEV_API_URL;
@@ -344,6 +345,7 @@ export default class App extends Component {
       authorName, authorEmail, projectTitle, previewScreenshot
     };
     return (
+      <ErrorBoundary>
       <Router>
         <div className='wrapper'>
           <OldHeader
@@ -382,6 +384,7 @@ export default class App extends Component {
                 </div>
         </div>
       </Router>
+      </ErrorBoundary>
     );
   }
 }

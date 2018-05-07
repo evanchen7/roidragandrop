@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, Image } from 'semantic-ui-react';
+import { Card, Image, Loader } from 'semantic-ui-react';
 import './css/finishedpage.css';
 import WPAPI from 'wpapi';
 
@@ -41,8 +41,8 @@ export default class StitchedPhotos extends Component {
     return pages.map((page, index) => {
       const { stitched_photo, author_name, project_title } = page.acf
       return (
-        <Card raised key={index}>
-          <Image src={stitched_photo.url}/>
+        <Card key={index} color='green'>
+          <Image size='large' src={stitched_photo.url}/>
           <Card.Header>{project_title}</Card.Header>
           <Card.Meta>{`Created on ${stitched_photo.date}`}</Card.Meta>
           <Card.Description>{author_name}</Card.Description>
@@ -52,15 +52,15 @@ export default class StitchedPhotos extends Component {
   }
 
   componentDidMount() {
-    this.grabFinishedPages()
+    this.grabFinishedPages();
   }
 
   render () {
     return (
         <div>
           {
-            !this.state.pages ? <h1>No Pages Saved</h1> :
-          <Card.Group itemsPerRow={4}>
+            !this.state.pages ? <Loader size='massive'/> :
+          <Card.Group centered itemsPerRow={4}>
             {this.formatCards()}
           </Card.Group>
 
