@@ -113,6 +113,18 @@ I added the production and development URL, as well as the required PORT number.
 * Relevant information regarding access, title, name, and link will display
 * Post ID represents the Finished Page id found in the Wordpress backend
 
+***
+<p align="center">
+    <img src="https://i.imgur.com/zOiFSUp.png" width="512" height="324"/>
+</p>
+<p align="center">
+    <em>Saving Stitched Photo to Wordpress</em>
+</p>
+
+* To save user's stitched photo, press Preview and then Save WP
+* All form fields must be filled out before a successful Post can occur
+
+
 ## Development/Production
 
 ### Access
@@ -204,6 +216,16 @@ yarn test
 ```
 npm run test
 ```
+
+## Express/NodeJS Backend
+Due to Wordpress NodeJS library not able to handle data blobs and recognizing Buffers, I utlized NodeJS FS module.
+
+When the user saves the Stitched Photo:
+1. The PNG image is saved as a png data blob in memory and encoded in Base64
+2. The front end application will make a POST request to the NodeJS server
+3. The server will check if the uploads folder exists and if not, will create one
+4. The image is saved and then uploaded to the production Wordpress backend
+5. The image is deleted from the server's memory and will send an OK response to the front end
 
 ## Styling Guide
 Airbnb Javascript style guide utilized - https://github.com/airbnb/javascript
