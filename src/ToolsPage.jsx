@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Icon, Loader } from 'semantic-ui-react';
 import OldModules from './OldModules';
+import ErrorBoundary from './ErrorBoundary';
 import './css/main.css';
 
 export default class ToolsPage extends Component {
@@ -108,6 +109,7 @@ export default class ToolsPage extends Component {
 
     render () {
         return (
+            <ErrorBoundary>
             <div>
                 <div id="menu">
                     <ul>
@@ -130,6 +132,7 @@ export default class ToolsPage extends Component {
                     </main>
 
             </div>
+            </ErrorBoundary>
         );
     }
 }
